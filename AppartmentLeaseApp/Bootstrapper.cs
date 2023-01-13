@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using AppartmentLeaseApp.Interfaces;
+using AppartmentLeaseApp.Models;
 using AppartmentLeaseApp.ViewModels;
 using Caliburn.Micro;
 
@@ -26,6 +28,9 @@ namespace AppartmentLeaseApp
             _simpleContainer.Singleton<IWindowManager, WindowManager>();
             _simpleContainer.Singleton<IEventAggregator, EventAggregator>();
             _simpleContainer.RegisterPerRequest(typeof(ShellViewModel), null, typeof(ShellViewModel));
+
+            // Dependency injection of functional classes
+            _simpleContainer.PerRequest<ICalculations, Calculations>();
 
             //Dependency Injection based on the class names of ViewModels
             GetType().Assembly.GetTypes()
