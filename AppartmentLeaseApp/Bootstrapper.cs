@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using AppartmentLeaseApp.Helpers;
 using AppartmentLeaseApp.Interfaces;
 using AppartmentLeaseApp.Models;
 using AppartmentLeaseApp.ViewModels;
@@ -27,6 +29,9 @@ namespace AppartmentLeaseApp
             //Dependency Injection
             _simpleContainer.Singleton<IWindowManager, WindowManager>();
             _simpleContainer.Singleton<IEventAggregator, EventAggregator>();
+            _simpleContainer.Singleton<IAPIHelper, APIHelper>();
+
+
             _simpleContainer.RegisterPerRequest(typeof(ShellViewModel), null, typeof(ShellViewModel));
 
             // Dependency injection of functional classes
@@ -44,9 +49,12 @@ namespace AppartmentLeaseApp
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<ShellViewModel>();
-            base.OnStartup(sender, e);
             // On starup ShellViewModel launches
+        }
 
+        protected Task DisplayRootViewFor<T>(IDictionary<string, object>? settings = null)
+        {
+            return DisplayRootViewForAsync(typeof(T), settings);
         }
 
         protected override object GetInstance(Type service, string key)
@@ -64,6 +72,9 @@ namespace AppartmentLeaseApp
             _simpleContainer.BuildUp(instance);
         }
 
-        
+        protected override IEnumerable<Assembly> SelectAssemblies()
+        {
+            return new[] {Assembly.GetExecutingAssembly()};
+        }
     }
 }
