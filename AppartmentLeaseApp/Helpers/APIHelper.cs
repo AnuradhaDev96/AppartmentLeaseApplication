@@ -53,7 +53,7 @@ namespace AppartmentLeaseApp.Helpers
                 }
                 else
                 {
-                    throw new Exception(responseMessage.ReasonPhrase);
+                    throw new Exception(responseMessage.StatusCode.ToString());
                 }
             }
         }

@@ -10,7 +10,6 @@ namespace AppartmentLeaseApp.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        private string _userName;
         private readonly IAPIHelper _apiHelper;
         //private readonly string _password;
 
@@ -19,14 +18,16 @@ namespace AppartmentLeaseApp.ViewModels
             _apiHelper = apiHelper;
         }
 
+        private string _userName;
+
         public string UserName
         {
             get { return _userName; }
-            set 
+            set
             {
                 _userName = value;
                 NotifyOfPropertyChange(() => UserName);
-                //NotifyOfPropertyChange(() => CanLogin);
+                NotifyOfPropertyChange(() => CanLogin);
             }
         }
 
@@ -39,19 +40,48 @@ namespace AppartmentLeaseApp.ViewModels
             { 
                 _password = value;
                 NotifyOfPropertyChange(() => Password);
-                //NotifyOfPropertyChange(() => CanLogin);
+                NotifyOfPropertyChange(() => CanLogin);
             }
         }
 
+        private bool _isErrorVisible;
+
+        public bool IsErrorVisible
+        {
+            get 
+            {
+                bool output = false;
+                if (ErrorMessage?.Length > 0)
+                {
+                    output = true;
+                }
+                return output; 
+            }
+        }
+
+        private string _errorMessage;
+
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set {
+                _errorMessage = value;
+                NotifyOfPropertyChange(() => ErrorMessage);
+                NotifyOfPropertyChange(() => IsErrorVisible);
+            }
+        }
+
+
         public bool CanLogin
         {
-            get
+            get                
             {
-                if (UserName.Length > 0 && Password.Length > 0)
+                bool output = false;
+                if (UserName?.Length > 0 && Password?.Length > 0)
                 {
-                    return true;
+                    return output;
                 }
-                return false;
+                return output;
             }
             
         }
@@ -60,12 +90,12 @@ namespace AppartmentLeaseApp.ViewModels
         {
             try
             {
+                ErrorMessage = "";
                 var result = await _apiHelper.Authenticate(userName, password);
             }
             catch (Exception e)
             {
-
-                Console.WriteLine(e.Message);
+                ErrorMessage = e.Message == "NotFound" ? "Incorrect Username or Password" : "Unexpected error occured";
             }
         }
     }
