@@ -32,14 +32,27 @@ namespace AppartmentLeaseApp.ViewModels
             UsersList = new BindingList<SystemUser>(list);
         }
 
+        private BindingList<SystemUser> _usersList2;
+
+        public BindingList<SystemUser> UsersList2
+        {
+            get { return _usersList2; }
+            set 
+            {
+                _usersList2 = value;
+                NotifyOfPropertyChange(() => UsersList2);
+            }
+        }
+
         private BindingList<SystemUser> _usersList;
 
         public BindingList<SystemUser> UsersList
         {
             get { return _usersList; }
-            set 
+            set
             {
-                _usersList = value; 
+                _usersList = value;
+                UsersList2 = value;
                 NotifyOfPropertyChange(() => UsersList);
             }
         }

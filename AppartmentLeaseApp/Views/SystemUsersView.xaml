@@ -11,6 +11,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -19,10 +20,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="40" Margin="0 0 0 10">
+        <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="40" Margin="0 0 0 10">
             Users List
         </TextBlock>
-        <ListBox x:Name="UsersList" Grid.Row="1" Grid.Column="1" MinHeight="200" MinWidth="300"
+        <ListBox x:Name="UsersList" Grid.Row="1" Grid.Column="1" MinHeight="200" MinWidth="200"
                  SelectedItem="{Binding SelectedUser}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -30,5 +31,15 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <ListView x:Name="UsersList2" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" MinWidth="250" Margin="30 0 0 0">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="Username" DisplayMemberBinding="{Binding Username}"/>
+                        <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}"/>
+                    </GridView.Columns>                    
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>
