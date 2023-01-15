@@ -24,6 +24,16 @@ namespace AppartmentLeaseAPI.Controllers
         }
         
         [Authorize]
+        [HttpGet("GetUsers")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<UserModel>)))]
+        public IActionResult GetUsers()
+        {
+            var users = UserConstants.UsersList.OrderBy(x => x.Id).ToList();
+
+            return Ok(users);
+        }
+        
+        [Authorize]
         [HttpGet("GetCurrentUser")]
         [ProducesResponseType(200, Type = (typeof(UserModel)))]
         [ProducesResponseType(404)]

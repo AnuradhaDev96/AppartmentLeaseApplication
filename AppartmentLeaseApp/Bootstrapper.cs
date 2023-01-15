@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using AppartmentLeaseApp.ApiProviders;
 using AppartmentLeaseApp.Helpers;
 using AppartmentLeaseApp.Interfaces;
 using AppartmentLeaseApp.Models;
@@ -24,11 +25,15 @@ namespace AppartmentLeaseApp
 
         protected override void Configure()
         {
-            _simpleContainer.Instance(_simpleContainer);
+            _simpleContainer.Instance(_simpleContainer)
+                .PerRequest<IUserManagementEndpoint, UserManagementEndpoint>();
+
+            // return instances per request
 
             //Dependency Injection
             _simpleContainer.Singleton<IWindowManager, WindowManager>();
             _simpleContainer.Singleton<IEventAggregator, EventAggregator>();
+            _simpleContainer.Singleton<ILoggedInUser, LoggedInUser>();
             _simpleContainer.Singleton<IAPIHelper, APIHelper>();
 
 
@@ -38,6 +43,7 @@ namespace AppartmentLeaseApp
             _simpleContainer.PerRequest<ICalculations, Calculations>();
 
             //Dependency Injection based on the class names of ViewModels
+            // Every time you get instance, a new instance returns
             GetType().Assembly.GetTypes()
                 .Where(type => type.IsClass)
                 .Where(type => type.Name.EndsWith("ViewModel"))
