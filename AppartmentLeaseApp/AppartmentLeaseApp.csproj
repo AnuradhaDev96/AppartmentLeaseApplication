@@ -40,8 +40,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ApiProviders\" />
-  </ItemGroup>
-
 </Project>

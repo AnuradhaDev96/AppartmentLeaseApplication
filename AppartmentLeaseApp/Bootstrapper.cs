@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using AppartmentLeaseApp.ApiProviders;
 using AppartmentLeaseApp.Helpers;
 using AppartmentLeaseApp.Interfaces;
 using AppartmentLeaseApp.Models;
@@ -24,7 +25,10 @@ namespace AppartmentLeaseApp
 
         protected override void Configure()
         {
-            _simpleContainer.Instance(_simpleContainer);
+            _simpleContainer.Instance(_simpleContainer)
+                .PerRequest<IUserManagementEndpoint, UserManagementEndpoint>();
+
+            // return instances per request
 
             //Dependency Injection
             _simpleContainer.Singleton<IWindowManager, WindowManager>();
