@@ -13,10 +13,12 @@ namespace AppartmentLeaseApp.Helpers
     public class APIHelper : IAPIHelper
     {
         private HttpClient ApiClient;
+        private ILoggedInUser _loggedInUser;
 
-        public APIHelper()
+        public APIHelper(ILoggedInUser loggedInUser)
         {
             InitializeClient();
+            _loggedInUser = loggedInUser;
         }
 
         private void InitializeClient()
@@ -50,6 +52,34 @@ namespace AppartmentLeaseApp.Helpers
                 {
                     var result = await responseMessage.Content.ReadAsAsync<string>();
                     return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
+        public async Task SyncLoggedInUser(string token)
+        {
+            ApiClient.DefaultRequestHeaders.Clear();
+            ApiClient.DefaultRequestHeaders.Accept.Clear();
+            ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            ApiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+
+            using (HttpResponseMessage responseMessage = await ApiClient.GetAsync(requestUri: "UserManagement/GetCurrentUser"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<LoggedInUser>();
+
+                    _loggedInUser.Token = token;
+                    _loggedInUser.Username = result.Username;
+                    _loggedInUser.Role = result.Role;
+                    _loggedInUser.Email = result.Email;
+                    _loggedInUser.Id = result.Id;
+                    //return result;
                 }
                 else
                 {

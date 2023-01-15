@@ -63,20 +63,5 @@ namespace AppartmentLeaseAPI.Controllers
             var currentUser = UserConstants.UsersList.FirstOrDefault(x => x.Username == data.Username && x.Password == data.Password);
             return currentUser;
         }
-
-
-        // Sample authorized request        
-        [HttpGet("GetUserByEmail/{email}")]
-        [Authorize]
-        public IActionResult GetUserByEmail(string email)
-        {
-            var user = UserConstants.UsersList.FirstOrDefault(x => x.Email == email);        
-
-            if (user != null)
-            {
-                return Ok(user);
-            }
-            return NotFound(@$"User not found for email {email}");
-        }
     }
 }

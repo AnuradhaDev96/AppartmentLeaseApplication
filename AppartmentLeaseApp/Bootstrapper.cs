@@ -29,6 +29,7 @@ namespace AppartmentLeaseApp
             //Dependency Injection
             _simpleContainer.Singleton<IWindowManager, WindowManager>();
             _simpleContainer.Singleton<IEventAggregator, EventAggregator>();
+            _simpleContainer.Singleton<ILoggedInUser, LoggedInUser>();
             _simpleContainer.Singleton<IAPIHelper, APIHelper>();
 
 
@@ -38,6 +39,7 @@ namespace AppartmentLeaseApp
             _simpleContainer.PerRequest<ICalculations, Calculations>();
 
             //Dependency Injection based on the class names of ViewModels
+            // Every time you get instance, a new instance returns
             GetType().Assembly.GetTypes()
                 .Where(type => type.IsClass)
                 .Where(type => type.Name.EndsWith("ViewModel"))

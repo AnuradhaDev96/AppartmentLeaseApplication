@@ -1,4 +1,5 @@
-﻿using AppartmentLeaseApp.Interfaces;
+﻿using AppartmentLeaseApp.EventModels;
+using AppartmentLeaseApp.Interfaces;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,13 @@ namespace AppartmentLeaseApp.ViewModels
     public class LoginViewModel : Screen
     {
         private readonly IAPIHelper _apiHelper;
+        private IEventAggregator _events;
         //private readonly string _password;
 
-        public LoginViewModel(IAPIHelper apiHelper)
+        public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events)
         {
             _apiHelper = apiHelper;
+            _events = events;
         }
 
         private string _userName;
@@ -92,6 +95,10 @@ namespace AppartmentLeaseApp.ViewModels
             {
                 ErrorMessage = "";
                 var result = await _apiHelper.Authenticate(userName, password);
+
+                await _apiHelper.SyncLoggedInUser(result);
+
+                await _events.PublishOnUIThreadAsync(new LoginEventModel());
             }
             catch (Exception e)
             {

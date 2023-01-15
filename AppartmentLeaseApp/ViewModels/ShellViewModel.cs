@@ -1,33 +1,50 @@
-﻿using AppartmentLeaseApp.Interfaces;
+﻿using AppartmentLeaseApp.EventModels;
+using AppartmentLeaseApp.Interfaces;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AppartmentLeaseApp.ViewModels
 {
-    public class ShellViewModel : Conductor<object>
+    public class ShellViewModel : Conductor<object>, IHandle<LoginEventModel>
     {
         private ICalculations _calculations;
-        private LoginViewModel _loginViewModel;
+        private SystemUsersViewModel _systemUsersViewModel;
+        IEventAggregator _events;
 
-        public ShellViewModel(ICalculations calculations, LoginViewModel loginViewModel)
+        private SimpleContainer _simpleContainer;
+
+        public ShellViewModel(ICalculations calculations, IEventAggregator events, 
+            SystemUsersViewModel systemUsersViewModel, SimpleContainer simpleContainer)
         {
+            _events = events;
+            _events.Subscribe(this);
             _calculations = calculations;
-            _loginViewModel = loginViewModel;
-            LoadPage();            
+            _systemUsersViewModel = systemUsersViewModel;
+            _simpleContainer = simpleContainer;
+
+            // to retrieve single instance per request
+            LoadPage(_simpleContainer.GetInstance<LoginViewModel>());            
         }
 
-        public async void LoadPage()
+        public async void LoadPage(object viewModel)
         {
-            await ActivateItem(_loginViewModel);
+            await ActivateItem(viewModel);
         }
 
         protected async Task ActivateItem(Object item)
         {
             await ActivateItemAsync(item);
+        }
+
+        public Task? HandleAsync(LoginEventModel message, CancellationToken cancellationToken)
+        {
+            LoadPage(_systemUsersViewModel);
+            return null;
         }
     }
 }

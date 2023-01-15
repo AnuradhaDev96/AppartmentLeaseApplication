@@ -9,5 +9,7 @@ namespace AppartmentLeaseApp.Interfaces
     public interface IAPIHelper
     {
         Task<string?> Authenticate(string username, string password);
+
+        Task SyncLoggedInUser(string token);
     }
 }
