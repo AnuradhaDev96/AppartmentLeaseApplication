@@ -1,4 +1,6 @@
-﻿using AppartmentLeaseAPI.Models;
+﻿using AppartmentLeaseAPI.Data.Enums;
+using AppartmentLeaseAPI.Interfaces;
+using AppartmentLeaseAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,37 +16,50 @@ namespace AppartmentLeaseAPI.Controllers
     public class LoginManagementController : ControllerBase
     {
         private IConfiguration _configuration;
+        private readonly IUserManagementRepository _userManagementRespository;
 
-        public LoginManagementController(IConfiguration configuration)
+        public LoginManagementController(IConfiguration configuration, 
+            IUserManagementRepository userManagementRespository)
         {
             _configuration = configuration;
+            _userManagementRespository = userManagementRespository;
         }
 
         [AllowAnonymous]
         [HttpPost("PasswordLogin")]
         public IActionResult PasswordLogin([FromBody] LoginModel data)
         {
-            var user = Authenticate(data);
+            if (data == null)
+                return BadRequest(ModelState);
 
-            if (user != null)
+            try
             {
-                var token = Generate(user);
-                return Ok(token);
+                var user = Authenticate(data);
+
+                if (user != null)
+                {
+                    var token = Generate(user);
+                    return Ok(token);
+                }
+                return NotFound("User not found");
             }
-            return NotFound("User not found");
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         private string Generate(UserModel user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
+            
             var claims = new[]
             {
                 new Claim(ClaimTypes.UserData, user.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Username),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Role, Enum.GetName(typeof(UserRole), user.Role)!),
             };
 
             var token = new JwtSecurityToken(
@@ -60,7 +75,8 @@ namespace AppartmentLeaseAPI.Controllers
 
         private UserModel? Authenticate(LoginModel data)
         {
-            var currentUser = UserConstants.UsersList.FirstOrDefault(x => x.Username == data.Username && x.Password == data.Password);
+            //var currentUser = UserConstants.UsersList.FirstOrDefault(x => x.Username == data.Username && x.Password == data.Password);
+            var currentUser = _userManagementRespository.GetUserByCredentials(data.Username, data.Password);
             return currentUser;
         }
     }

@@ -1,4 +1,7 @@
-﻿using AppartmentLeaseAPI.Models;
+﻿using AppartmentLeaseAPI.Dtos;
+using AppartmentLeaseAPI.Interfaces;
+using AppartmentLeaseAPI.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,32 +13,51 @@ namespace AppartmentLeaseAPI.Controllers
     [ApiController]
     public class UserManagementController : ControllerBase
     {
+        private readonly IUserManagementRepository _userManagementRespository;
+        private readonly IMapper _mapper;
+
+        public UserManagementController(IUserManagementRepository userManagementRespository, IMapper mapper)
+        {
+            _userManagementRespository = userManagementRespository;
+            _mapper = mapper;
+        }
+
         [Authorize]
-        [HttpGet("GetUserByEmail/{email}")]        
+        [HttpGet("GetUserByEmail/{email}")]
+        [ProducesResponseType(200, Type = (typeof(UserGetDto)))]
         public IActionResult GetUserByEmail(string email)
         {
-            var user = UserConstants.UsersList.FirstOrDefault(x => x.Email == email);
-
-            if (user != null)
+            try
             {
-                return Ok(user);
+                var userResult = _userManagementRespository.GetUserByEmail(email);
+                var user = _mapper.Map<UserGetDto>(userResult);
+
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+                return NotFound(@$"User not found for email {email}");
             }
-            return NotFound(@$"User not found for email {email}");
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         
         [Authorize]
         [HttpGet("GetUsers")]
-        [ProducesResponseType(200, Type = (typeof(IEnumerable<UserModel>)))]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<UserGetDto>)))]
         public IActionResult GetUsers()
         {
-            var users = UserConstants.UsersList.OrderBy(x => x.Id).ToList();
+            var users = _userManagementRespository.GetSystemUsers();
+            var userGetDtos = _mapper.Map<ICollection<UserGetDto>>(users);
 
-            return Ok(users);
+            return Ok(userGetDtos);
         }
         
         [Authorize]
         [HttpGet("GetCurrentUser")]
-        [ProducesResponseType(200, Type = (typeof(UserModel)))]
+        [ProducesResponseType(200, Type = (typeof(UserGetDto)))]
         [ProducesResponseType(404)]
         public IActionResult GetUserWithClaims()
         {
@@ -45,7 +67,7 @@ namespace AppartmentLeaseAPI.Controllers
             {
                 var userClaims = identity.Claims;
 
-                var userWithClaims = new UserModel
+                var userWithClaims = new UserGetDto
                 {
                     Id = Convert.ToInt32(userClaims.FirstOrDefault(x => x.Type == ClaimTypes.UserData)?.Value ?? "0"),
                     Username = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? "",

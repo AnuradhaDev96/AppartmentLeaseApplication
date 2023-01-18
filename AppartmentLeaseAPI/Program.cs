@@ -1,15 +1,33 @@
+using AppartmentLeaseAPI.Data;
 using AppartmentLeaseAPI.Helpers;
+using AppartmentLeaseAPI.Interfaces;
+using AppartmentLeaseAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(x =>
+    {
+        x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+
+        var enumConverter = new JsonStringEnumConverter();
+        x.JsonSerializerOptions.Converters.Add(enumConverter);
+    });
+
+// Add mapping profile
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Add dependency injections
+builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 
 // JWT configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -48,6 +66,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 
     options.OperationFilter<SecureEndpointAuthRequirementFilter>();
+});
+
+// Add DbContext
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 var app = builder.Build();
