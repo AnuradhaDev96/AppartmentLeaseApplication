@@ -1,8 +1,10 @@
 ﻿using AppartmentLeaseAPI.Data.Enums;
 using AppartmentLeaseAPI.Models;
+using AppartmentLeaseAPI.Models.Anonymous;
 using AppartmentLeaseAPI.Models.Apartments;
 using AppartmentLeaseAPI.Models.Customers;
 using AppartmentLeaseAPI.Models.LeaseManagement;
+using AppartmentLeaseAPI.Models.Payments;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppartmentLeaseAPI.Data
@@ -30,6 +32,14 @@ namespace AppartmentLeaseAPI.Data
         public DbSet<Dependant> Dependants { get; set; }
         public DbSet<LeaseAgreement> LeaseAgreements { get; set; }
         public DbSet<LeaseExtentionRequest> LeaseExtentionRequests { get; set; }
+        public DbSet<PaymentInstallment> PaymentInstallments { get; set; }
+
+        public DbSet<Payment> Payments { get; set; }
+
+        public DbSet<ReservationInquiry> ReservationInquiries { get; set; }
+        public DbSet<WaitingApplication> WaitingApplications { get; set; }
+
+
 
         //For Many-Many relationships
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -70,6 +80,24 @@ namespace AppartmentLeaseAPI.Data
                 .HasConversion(
                     x => x.ToString(),
                     x => (LeaseExtentionRequestStatus)Enum.Parse(typeof(LeaseExtentionRequestStatus), x));
+
+            modelBuilder.Entity<PaymentInstallment>()
+                .Property(a => a.Status)
+                .HasConversion(
+                    x => x.ToString(),
+                    x => (PaymentInstallmentStatus)Enum.Parse(typeof(PaymentInstallmentStatus), x));
+            
+            modelBuilder.Entity<Payment>()
+                .Property(a => a.PaymentReason)
+                .HasConversion(
+                    x => x.ToString(),
+                    x => (PaymentReason)Enum.Parse(typeof(PaymentReason), x));
+
+            modelBuilder.Entity<ReservationInquiry>()
+                .Property(a => a.Status)
+                .HasConversion(
+                    x => x.ToString(),
+                    x => (InquiryStatus)Enum.Parse(typeof(InquiryStatus), x));
             #endregion
 
             modelBuilder.Entity<ApartmentClassFacility>()
@@ -107,6 +135,22 @@ namespace AppartmentLeaseAPI.Data
             modelBuilder.Entity<LeaseExtentionRequest>()
                 .HasOne(d => d.LeaseAgreement)
                 .WithMany(c => c.LeaseExtentionRequests)
+                .HasForeignKey(d => d.LeaseAgreementId);
+            
+            modelBuilder.Entity<PaymentInstallment>()
+                .HasKey(i => new { i.Id });
+
+            modelBuilder.Entity<PaymentInstallment>()
+                .HasOne(d => d.LeaseAgreement)
+                .WithMany(c => c.PaymentInstallments)
+                .HasForeignKey(d => d.LeaseAgreementId);
+
+            modelBuilder.Entity<Payment>()
+                .HasKey(i => new { i.Id });
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(d => d.LeaseAgreement)
+                .WithMany(c => c.DonePayments)
                 .HasForeignKey(d => d.LeaseAgreementId);
         }
     }

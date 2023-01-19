@@ -1,5 +1,6 @@
 ﻿using AppartmentLeaseAPI.Data.Enums;
 using AppartmentLeaseAPI.Models.Apartments;
+using AppartmentLeaseAPI.Models.Payments;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -31,5 +32,9 @@ namespace AppartmentLeaseAPI.Models.LeaseManagement
         public Apartment Apartment { get; set; }
 
         public ICollection<LeaseExtentionRequest>? LeaseExtentionRequests { get; set; }
+
+        public ICollection<PaymentInstallment> PaymentInstallments { get; set; }
+
+        public ICollection<Payment> DonePayments { get; set; }
     }
 }
