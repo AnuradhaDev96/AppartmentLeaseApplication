@@ -26,7 +26,8 @@ namespace AppartmentLeaseApp
         protected override void Configure()
         {
             _simpleContainer.Instance(_simpleContainer)
-                .PerRequest<IUserManagementEndpoint, UserManagementEndpoint>();
+                .PerRequest<IUserManagementEndpoint, UserManagementEndpoint>()
+                .PerRequest<IApartmentManagementEndpoint, ApartmentManagementEndpoint>();
 
             // return instances per request
 

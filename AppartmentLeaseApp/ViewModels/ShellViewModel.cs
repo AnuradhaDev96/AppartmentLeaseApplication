@@ -13,18 +13,19 @@ namespace AppartmentLeaseApp.ViewModels
     public class ShellViewModel : Conductor<object>, IHandle<LoginEventModel>
     {
         private ICalculations _calculations;
-        private SystemUsersViewModel _systemUsersViewModel;
+        //private SystemUsersViewModel _systemUsersViewModel;
+        private ClerkDashboardViewModel _clerkDashboardViewModel;
         IEventAggregator _events;
 
         private SimpleContainer _simpleContainer;
 
-        public ShellViewModel(ICalculations calculations, IEventAggregator events, 
-            SystemUsersViewModel systemUsersViewModel, SimpleContainer simpleContainer)
+        public ShellViewModel(ICalculations calculations, IEventAggregator events,
+            ClerkDashboardViewModel clerkDashboardViewModel, SimpleContainer simpleContainer)
         {
             _events = events;
             _events.Subscribe(this);
             _calculations = calculations;
-            _systemUsersViewModel = systemUsersViewModel;
+            _clerkDashboardViewModel = clerkDashboardViewModel;
             _simpleContainer = simpleContainer;
 
             // to retrieve single instance per request
@@ -43,7 +44,7 @@ namespace AppartmentLeaseApp.ViewModels
 
         public Task? HandleAsync(LoginEventModel message, CancellationToken cancellationToken)
         {
-            LoadPage(_systemUsersViewModel);
+            LoadPage(_clerkDashboardViewModel);
             return null;
         }
     }

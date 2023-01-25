@@ -4,6 +4,7 @@ using AppartmentLeaseAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppartmentLeaseAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230120102748_AddNameColumnToClass")]
+    partial class AddNameColumnToClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,9 +138,6 @@ namespace AppartmentLeaseAPI.Migrations
                     b.Property<int>("AttachedBathroomCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("BedCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("MaximumOccupantCount")
                         .HasColumnType("int");
 
@@ -150,6 +150,9 @@ namespace AppartmentLeaseAPI.Migrations
 
                     b.Property<double>("RefundableDepositAmount")
                         .HasColumnType("float");
+
+                    b.Property<int>("RoomCount")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

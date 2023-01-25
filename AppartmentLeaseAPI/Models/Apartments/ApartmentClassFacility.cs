@@ -7,7 +7,6 @@ namespace AppartmentLeaseAPI.Models.Apartments
     {
         [Key]
         public int Id { get; set; }
-        // Id 0 is means the facility available for all the apartment classes
 
         [ForeignKey("ApartmentClassId")]
         public int ApartmentClassId { get; set; }
