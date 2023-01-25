@@ -41,5 +41,22 @@ namespace AppartmentLeaseApp.ApiProviders
                 }
             }
         }
+
+        public async Task<List<ReservationRequestResponse>?> GetReservationRequests()
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: "AnonymousManagement/ReservationRequests"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<ReservationRequestResponse>?>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
     }
 }

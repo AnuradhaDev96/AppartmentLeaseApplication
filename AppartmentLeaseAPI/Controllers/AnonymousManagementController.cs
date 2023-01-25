@@ -47,5 +47,26 @@ namespace AppartmentLeaseAPI.Controllers
 
             return Ok("Request created. Our agents will contact you soon.");
         }
+
+        [Authorize]
+        [HttpGet("ReservationRequests")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ReservationInquiry>)))]
+        public IActionResult GetApartmentClasses()
+        {
+            try
+            {
+                var result = _anonymousManagementRepository.GetReservationInquiries();
+                //var user = _mapper.Map<List<ApartmentClassFacilitiesDto>>(result);
+
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

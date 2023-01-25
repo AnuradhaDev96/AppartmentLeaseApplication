@@ -20,6 +20,12 @@ namespace AppartmentLeaseAPI.Repositories
             return Save();
         }
 
+        public ICollection<ReservationInquiry>? GetReservationInquiries()
+        {
+            var reservationInquiries = _dataContext.ReservationInquiries.ToList();
+            return reservationInquiries;
+        }
+
         public bool isPendingStatusInquiryExistForTelephoneNumber(string telephoneNumber)
         {
             return _dataContext.ReservationInquiries.Any(

@@ -11,14 +11,14 @@ namespace AppartmentLeaseApp.ViewModels
     {
         private SystemUsersViewModel _systemUsersViewModel;
         private ApartmentClassesViewModel _apartmentClassesViewModel;
-        //private SimpleContainer _simpleContainer;
+        private SimpleContainer _simpleContainer;
 
         public ClerkDashboardViewModel(SimpleContainer simpleContainer, SystemUsersViewModel systemUsersViewModel,
             ApartmentClassesViewModel apartmentClassesViewModel)
         {
             _systemUsersViewModel = systemUsersViewModel;
             _apartmentClassesViewModel = apartmentClassesViewModel;
-            //_simpleContainer = simpleContainer;
+            _simpleContainer = simpleContainer;
         }
 
         private object _currentView;
@@ -43,6 +43,12 @@ namespace AppartmentLeaseApp.ViewModels
         {
             //CurrentView = _systemUsersViewModel;
             await ActivateItemAsync(_apartmentClassesViewModel);
+        }
+
+        public async void ReviewReservationInquiriesPage()
+        {
+            //CurrentView = _systemUsersViewModel;
+            await ActivateItemAsync(_simpleContainer.GetInstance<ReviewReservationRequestsViewModel>());
         }
 
     }

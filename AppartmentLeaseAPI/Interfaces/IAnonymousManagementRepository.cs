@@ -7,5 +7,7 @@ namespace AppartmentLeaseAPI.Interfaces
         bool CreateReservationRequest(ReservationInquiry reservationInquiry);
 
         bool isPendingStatusInquiryExistForTelephoneNumber(string telephoneNumber);
+
+        ICollection<ReservationInquiry>? GetReservationInquiries();
     }
 }
