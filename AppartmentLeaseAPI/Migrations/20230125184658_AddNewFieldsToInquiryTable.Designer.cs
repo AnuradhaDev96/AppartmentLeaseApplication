@@ -4,6 +4,7 @@ using AppartmentLeaseAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppartmentLeaseAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230125184658_AddNewFieldsToInquiryTable")]
+    partial class AddNewFieldsToInquiryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,9 +88,6 @@ namespace AppartmentLeaseAPI.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RequiredStartDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("TelephoneNo")
                         .IsRequired()
@@ -302,27 +302,12 @@ namespace AppartmentLeaseAPI.Migrations
                     b.Property<int>("ApartmentId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndtDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsMonthAdvancePaid")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRefundableDepositPaid")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("PurchasedParkingSpaceId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("TotalCost")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -369,13 +354,7 @@ namespace AppartmentLeaseAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("LeaseAgreementId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PayOrder")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -399,9 +378,6 @@ namespace AppartmentLeaseAPI.Migrations
 
                     b.Property<int>("LeaseAgreementId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("PaidOn")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentReason")
                         .IsRequired()

@@ -29,6 +29,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Add dependency injections
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IApartmentManagementRepository, ApartmentManagementRepository>();
+builder.Services.AddScoped<IAnonymousManagementRepository, AnonymousManagementRepository>();
 
 // JWT configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

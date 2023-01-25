@@ -11,9 +11,9 @@ namespace AppartmentLeaseAPI.Models.LeaseManagement
 
         public PaymentInstallmentStatus Status { get; set; }
 
-        public DateTime DueDate;
+        public DateTime DueDate { get; set; }
 
-        public int PayOrder;
+        public int PayOrder { get; set; }
 
         [ForeignKey("LeaseAgreementId")]
         public int LeaseAgreementId { get; set; }
