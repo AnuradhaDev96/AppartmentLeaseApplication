@@ -21,7 +21,7 @@ namespace AppartmentLeaseAPI.Models.Anonymous
         /// If (InquiryStatus == WaitingList) WaitingApplicationId != null
         /// If (InquiryStatus == LeaseCreated) LeaseAgreementId != null
         /// </summary>
-        public InquiryStatus Status;
+        public InquiryStatus Status { get; set; }
         
         [ForeignKey("WaitingApplicationId")]
         public int? WaitingApplicationId { get; set; }
