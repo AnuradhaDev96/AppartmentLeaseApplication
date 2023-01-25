@@ -13,9 +13,9 @@ namespace AppartmentLeaseAPI.Models.Anonymous
         public string FullName { get; set; }
         public string TelephoneNo { get; set; }
 
-        public string Email;
+        public string Email { get; set; }
 
-        public DateTime CreatedOn;
+        public DateTime CreatedOn { get; set; }
 
         /// <summary>
         /// If (InquiryStatus == WaitingList) WaitingApplicationId != null

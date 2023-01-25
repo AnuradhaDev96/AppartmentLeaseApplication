@@ -27,7 +27,8 @@ namespace AppartmentLeaseApp
         {
             _simpleContainer.Instance(_simpleContainer)
                 .PerRequest<IUserManagementEndpoint, UserManagementEndpoint>()
-                .PerRequest<IApartmentManagementEndpoint, ApartmentManagementEndpoint>();
+                .PerRequest<IApartmentManagementEndpoint, ApartmentManagementEndpoint>()
+                .PerRequest<IAnonymousManagementEndpoint, AnonymousManagementEndpoint>();
 
             // return instances per request
 

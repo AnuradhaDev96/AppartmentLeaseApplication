@@ -13,15 +13,15 @@ namespace AppartmentLeaseAPI.Models.LeaseManagement
 
         public LeaseAgreementStatus Status { get; set; }
 
-        public DateTime StartDate;
+        public DateTime StartDate { get; set; }
 
-        public DateTime EndtDate;
+        public DateTime EndtDate { get; set; }
 
-        public bool IsRefundableDepositPaid;
+        public bool IsRefundableDepositPaid { get; set; }
 
-        public bool IsMonthAdvancePaid;
+        public bool IsMonthAdvancePaid { get; set; }
 
-        public double TotalCost;
+        public double TotalCost { get; set; }
 
         [ForeignKey("PurchasedParkingSpaceId")]
         public int? PurchasedParkingSpaceId { get; set; }

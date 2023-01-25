@@ -105,5 +105,10 @@ namespace AppartmentLeaseApp.ViewModels
                 ErrorMessage = e.Message == "NotFound" ? "Incorrect Username or Password" : "Unexpected error occured";
             }
         }
+
+        public async Task CreateRequest()
+        {
+            await _events.PublishOnUIThreadAsync(new CreateReservationRequestEventModel());
+        }
     }
 }

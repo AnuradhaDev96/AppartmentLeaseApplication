@@ -19,7 +19,7 @@ namespace AppartmentLeaseAPI.Models.Anonymous
         [Required]
         public string Email { get; set; }
 
-        public DateTime RequiredStartDate;
+        public DateTime RequiredStartDate { get; set; }
 
         [ForeignKey("ApartmentClassId")]
         public int ApartmentClassId { get; set; }

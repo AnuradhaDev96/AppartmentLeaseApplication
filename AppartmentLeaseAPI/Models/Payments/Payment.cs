@@ -12,7 +12,7 @@ namespace AppartmentLeaseAPI.Models.Payments
 
         public PaymentReason PaymentReason { get; set; }
 
-        public DateTime PaidOn;
+        public DateTime PaidOn { get; set; }
 
         [ForeignKey("LeaseAgreementId")]
         public int LeaseAgreementId { get; set; }
