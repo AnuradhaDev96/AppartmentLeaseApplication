@@ -1,4 +1,5 @@
 ﻿using AppartmentLeaseAPI.Dtos;
+using AppartmentLeaseAPI.Dtos.QueryParameters;
 using AppartmentLeaseAPI.Interfaces;
 using AppartmentLeaseAPI.Models.Apartments;
 using AutoMapper;
@@ -78,6 +79,27 @@ namespace AppartmentLeaseAPI.Controllers
             try
             {
                 var result = _apartmentManagementRepository.GetAvailableParkingSpaces();
+
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Apartments/AvailableApartments/Filter")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentGetDto>)))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAvailableApartments([FromQuery] AvailableApartmentFilterQuery query)
+        {
+            try
+            {
+                var result = _apartmentManagementRepository.FilterAvailableApartments(location: query.Location, apartmentType: query.ApartmentType);
 
                 if (!ModelState.IsValid)
                     return BadRequest();
