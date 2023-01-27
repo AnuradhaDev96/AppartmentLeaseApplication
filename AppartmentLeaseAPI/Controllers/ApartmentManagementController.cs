@@ -43,6 +43,8 @@ namespace AppartmentLeaseAPI.Controllers
             }
         }
 
+        #region Apartments
+
         /// <summary>
         /// Initially returns the Apartments in Available, Maintenance, and Occupied status
         /// If in Occupied status special query should be executed
@@ -111,6 +113,8 @@ namespace AppartmentLeaseAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        #endregion
 
     }
 }

@@ -73,6 +73,13 @@ namespace AppartmentLeaseAPI.Repositories
 
         }
 
+        public ApartmentClass? GetApartmentClassDetails(int apartmentId)
+        {
+            var apartment = _context.Apartments.Where(ap => ap.Id == apartmentId).FirstOrDefault();
+
+            return _context.ApartmentClasses.Where(a => a.Id == apartment.ApartmentClassId).FirstOrDefault();
+        }
+
         public ICollection<ApartmentClassFacilitiesDto> GetApartmentClasses()
         {
             var apartmentClasses = _context.ApartmentClasses.ToList();

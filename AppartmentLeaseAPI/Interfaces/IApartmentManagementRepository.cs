@@ -12,5 +12,7 @@ namespace AppartmentLeaseAPI.Interfaces
         ICollection<ApartmentGetDto> FilterAvailableApartments(string location = "", string apartmentType = "");
 
         ICollection<ParkingSpace> GetAvailableParkingSpaces();
+
+        ApartmentClass? GetApartmentClassDetails(int apartmentId);
     }
 }

@@ -13,6 +13,13 @@ namespace AppartmentLeaseAPI.Repositories
             _context = context;
         }
 
+        public async Task<int?> CreateSystemUser(UserModel user)
+        {
+            var newUser = await _context.SystemUsers.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return newUser.Entity.Id;
+        }
+
         public ICollection<UserModel> GetSystemUsers()
         {
             return _context.SystemUsers.OrderBy(x => x.Id).ToList();
