@@ -10,5 +10,9 @@ namespace AppartmentLeaseApp.Interfaces
     public interface IApartmentManagementEndpoint
     {
         Task<List<ApartmentClassFacilitiesResponse>> GetAppartmentClassesWithFacilities();
+
+        Task<List<ApartmentsResponse>> GetAvailableApartmentsWithDetails();
+
+        Task<List<ParkingSpaceResponse>> GetAvailableParkingSpaces();
     }
 }

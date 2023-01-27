@@ -18,6 +18,9 @@ namespace AppartmentLeaseAPI.Helpers
 
             CreateMap<ReservationInquiry, ReservationInquiryCreateDto>();
             CreateMap<ReservationInquiryCreateDto, ReservationInquiry>();
+
+            CreateMap<Apartment, ApartmentGetDto>();
+            CreateMap<ApartmentGetDto, Apartment>();
         }
     }
 }

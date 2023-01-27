@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AppartmentLeaseAPI.Models.LeaseManagement;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppartmentLeaseAPI.Models.Customers
@@ -28,5 +29,7 @@ namespace AppartmentLeaseAPI.Models.Customers
         public UserModel SystemUser { get; set; }
 
         public ICollection<Dependant> Dependants { get; set; }
+
+        public ICollection<LeaseAgreement> LeaseAgreements { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AppartmentLeaseAPI.Data.Enums;
 using AppartmentLeaseAPI.Models.Apartments;
+using AppartmentLeaseAPI.Models.Customers;
 using AppartmentLeaseAPI.Models.Payments;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -30,6 +31,10 @@ namespace AppartmentLeaseAPI.Models.LeaseManagement
         [ForeignKey("ApartmentId")]
         public int ApartmentId { get; set; }
         public Apartment Apartment { get; set; }
+
+        [ForeignKey("ChiefOccupantId")]
+        public int ChiefOccupantId { get; set; }
+        public ChiefOccupant ChiefOccupant { get; set; }
 
         public ICollection<LeaseExtentionRequest>? LeaseExtentionRequests { get; set; }
 

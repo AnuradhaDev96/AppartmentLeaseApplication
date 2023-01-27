@@ -10,6 +10,11 @@
         /// <summary>
         /// Available for purchase in Lease Agreement
         /// </summary>
-        Available
+        Available,
+
+        /// <summary>
+        /// These are purchased additionally for Lease Agreement
+        /// </summary>
+        Purchased
     }
 }

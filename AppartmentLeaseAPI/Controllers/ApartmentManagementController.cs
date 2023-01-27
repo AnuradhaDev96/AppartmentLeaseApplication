@@ -42,5 +42,53 @@ namespace AppartmentLeaseAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Initially returns the Apartments in Available, Maintenance, and Occupied status
+        /// If in Occupied status special query should be executed
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("Apartments/AvailableApartments")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentGetDto>)))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAvailableApartments()
+        {
+            try
+            {
+                var result = _apartmentManagementRepository.GetAvailableApartments();
+
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [Authorize]
+        [HttpGet("ParkingSpaces/AvailableParkingSpaces")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ParkingSpace>)))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAvailableParkingSpaces()
+        {
+            try
+            {
+                var result = _apartmentManagementRepository.GetAvailableParkingSpaces();
+
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

@@ -34,5 +34,39 @@ namespace AppartmentLeaseApp.ApiProviders
                 }
             }
         }
+
+        public async Task<List<ApartmentsResponse>> GetAvailableApartmentsWithDetails()
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: "ApartmentManagement/Apartments/AvailableApartments"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<ApartmentsResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
+        public async Task<List<ParkingSpaceResponse>> GetAvailableParkingSpaces()
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: "ApartmentManagement/ParkingSpaces/AvailableParkingSpaces"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<ParkingSpaceResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
     }
 }

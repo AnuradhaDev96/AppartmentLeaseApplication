@@ -11,9 +11,11 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -23,7 +25,7 @@
             Review Reservation Requests
         </TextBlock>
 
-        <ListView x:Name="ReservationRequestsList" Grid.Row="1" Grid.Column="1" MinWidth="250" Margin="5 0 15 0"
+        <ListView x:Name="ReservationRequestsList" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MinWidth="250" Margin="5 0 15 0"
                   SelectedItem="{Binding SelectedItem}" SelectionMode="Single">
             <ListView.View>
                 <GridView>
@@ -37,5 +39,17 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <!--Action Column-->
+        <Button Grid.Row="1" Grid.Column="2" Padding="5 0 5 0"
+                HorizontalAlignment="Center" x:Name="OpenApartmentWindow">
+            Search Available Apartments
+        </Button>
+
+        <!--Error message row-->
+        <TextBlock Grid.Row="2" Grid.Column="2" Margin="0 10 0 0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Top"
+                   x:Name="ErrorMessage" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" 
+                   MaxWidth="305" TextWrapping="Wrap"/>
+
     </Grid>
 </UserControl>
