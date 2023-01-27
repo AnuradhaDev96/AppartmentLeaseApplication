@@ -152,6 +152,14 @@ namespace AppartmentLeaseAPI.Data
                 .HasOne(d => d.LeaseAgreement)
                 .WithMany(c => c.DonePayments)
                 .HasForeignKey(d => d.LeaseAgreementId);
+
+            modelBuilder.Entity<LeaseAgreement>()
+                .HasKey(i => new { i.Id });
+
+            modelBuilder.Entity<LeaseAgreement>()
+                .HasOne(d => d.ChiefOccupant)
+                .WithMany(c => c.LeaseAgreements)
+                .HasForeignKey(d => d.ChiefOccupantId);
         }
     }
 }

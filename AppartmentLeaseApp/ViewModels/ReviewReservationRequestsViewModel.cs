@@ -10,14 +10,18 @@ using System.Threading.Tasks;
 
 namespace AppartmentLeaseApp.ViewModels
 {
-    public class ReviewReservationRequestsViewModel : Screen
+    public class ReviewReservationRequestsViewModel : Conductor<Screen>
     {
         private IAnonymousManagementEndpoint _anonymousManagementEndpoint;
         private List<ReservationRequestResponse>? requestList;
+        private IWindowManager _windowManager;
+        private SimpleContainer _simpleContainer;
 
-        public ReviewReservationRequestsViewModel(IAnonymousManagementEndpoint anonymousManagementEndpoint)
+        public ReviewReservationRequestsViewModel(IAnonymousManagementEndpoint anonymousManagementEndpoint, IWindowManager windowManager, SimpleContainer simpleContainer)
         {
             _anonymousManagementEndpoint = anonymousManagementEndpoint;
+            _windowManager = windowManager;
+            _simpleContainer = simpleContainer;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -45,9 +49,9 @@ namespace AppartmentLeaseApp.ViewModels
             }
         }
 
-        private ReservationRequestResponse _selectedItem;
+        private ReservationRequestResponse? _selectedItem;
 
-        public ReservationRequestResponse SelectedItem
+        public ReservationRequestResponse? SelectedItem
         {
             get { return _selectedItem; }
             set
@@ -65,6 +69,50 @@ namespace AppartmentLeaseApp.ViewModels
             }
         }
 
+        #region Open search apartments window
 
+        private bool _isErrorVisible;
+
+        public bool IsErrorVisible
+        {
+            get
+            {
+                bool output = false;
+                if (ErrorMessage?.Length > 0)
+                {
+                    output = true;
+                }
+                return output;
+            }
+        }
+
+        private string _errorMessage;
+
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set
+            {
+                _errorMessage = value;
+                NotifyOfPropertyChange(() => ErrorMessage);
+                NotifyOfPropertyChange(() => IsErrorVisible);
+            }
+        }
+
+        public async Task OpenApartmentWindow()
+        {
+            ErrorMessage = "";
+            if (_selectedItem == null)
+            {
+                ErrorMessage = "Please select an inquiry";
+                return;
+            }                
+
+            await _windowManager.ShowWindowAsync(
+                new AvailableApartmentsForReservationInquiryViewModel(
+                    selectedRequiry: _selectedItem, 
+                    apartmentManagementEndpoint: _simpleContainer.GetInstance<IApartmentManagementEndpoint>()));
+        }
+        #endregion
     }
 }
