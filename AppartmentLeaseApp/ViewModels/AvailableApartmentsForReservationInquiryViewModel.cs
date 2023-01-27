@@ -101,5 +101,37 @@ namespace AppartmentLeaseApp.ViewModels
             }
         }
         #endregion
+
+        #region Filter Attrbiutes
+        private string _byLocation;
+
+        public string ByLocation
+        {
+            get { return _byLocation; }
+            set
+            {
+                _byLocation = value;
+                NotifyOfPropertyChange(() => ByLocation);
+            }
+        }
+
+        private string _byApartmentType;
+
+        public string ByApartmentType
+        {
+            get { return _byApartmentType; }
+            set
+            {
+                _byApartmentType = value;
+                NotifyOfPropertyChange(() => ByApartmentType);
+            }
+        }
+
+        public async Task FilterApartmentList()
+        {
+            var filteredList = await _apartmentManagementEndpoint.FilterAvailableApartments(location: ByLocation ?? "", apartmentType: ByApartmentType ?? "");
+            AvailableApartmentList = new BindingList<ApartmentsResponse>(filteredList);
+        }
+        #endregion
     }
 }

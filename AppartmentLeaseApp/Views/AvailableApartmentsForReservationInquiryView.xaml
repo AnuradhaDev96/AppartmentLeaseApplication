@@ -5,10 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AppartmentLeaseApp.Views"
              mc:Ignorable="d" Background="BlanchedAlmond"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1080">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
@@ -20,11 +21,25 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="30" Margin="0 15 0 10">
+        <StackPanel  Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+            <TextBlock  FontSize="18" FontWeight="Bold" Margin="10 0 10 0" HorizontalAlignment="Center">Filter Apartments</TextBlock>
+            
+            <TextBlock FontSize="14" FontWeight="Bold" Margin="0 8 20 0">by Location:</TextBlock>
+            <TextBox x:Name="ByLocation" MinHeight="20" Margin="0 8 0 0"/>
+
+            <TextBlock FontSize="14" FontWeight="Bold" Margin="0 12 20 0">by Class:</TextBlock>
+            <TextBox x:Name="ByApartmentType" MinHeight="20" Margin="0 8 0 0"/>
+            
+            <Button HorizontalAlignment="Center" x:Name="FilterApartmentList" Margin="0 5 0 0" Padding="20 5 20 5">
+                Filter
+            </Button>
+        </StackPanel>
+
+        <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" FontSize="30" Margin="0 15 0 10">
             Available Apartments
         </TextBlock>
 
-        <ListView x:Name="AvailableApartmentList" Grid.Row="1" Grid.Column="1" MinWidth="250" Margin="40 0 20 80">
+        <ListView x:Name="AvailableApartmentList" Grid.Row="1" Grid.Column="2" MinWidth="250" MinHeight="300" Margin="40 0 20 80">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
@@ -39,7 +54,7 @@
             </ListView.View>
         </ListView>
 
-        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical">
+        <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Vertical">
             <TextBlock FontSize="18" FontWeight="Bold" Margin="0 0 0 0" HorizontalAlignment="Center">Selected Customer</TextBlock>
             
             <TextBlock FontSize="14" FontWeight="Bold" Margin="0 8 20 0">Customer Name:</TextBlock>
@@ -49,7 +64,7 @@
             <TextBlock x:Name="TelephoneNumber" Margin="0 0 0 0"></TextBlock>
 
             <TextBlock FontSize="14" FontWeight="Bold" Margin="0 0 20 0">Purchaseable parking spaces:</TextBlock>
-            <ListBox x:Name="AvailableParkingSpacesList" Grid.Row="1" Grid.Column="1" MinHeight="150" MinWidth="60" MaxHeight="200"
+            <ListBox x:Name="AvailableParkingSpacesList" MinHeight="150" MinWidth="60" MaxHeight="200"
                  SelectedItem="{Binding SelectedParkingSpace}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -59,7 +74,7 @@
             </ListBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Vertical" Margin="5 0 10 0">
+        <StackPanel Grid.Row="1" Grid.Column="4" Orientation="Vertical" Margin="5 0 10 0">
             <Button HorizontalAlignment="Center" x:Name="CreateLeaseAgreement">
                 Create Lease Agreement
             </Button>

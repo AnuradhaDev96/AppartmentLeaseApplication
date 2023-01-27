@@ -18,6 +18,61 @@ namespace AppartmentLeaseAPI.Repositories
             _mapper = mapper;
         }
 
+        public ICollection<ApartmentGetDto> FilterAvailableApartments(string location = "", string apartmentType = "")
+        {
+            var availableApartments = _context.Apartments.Where(a => a.Status == ApartmentAvailabilityStatus.Available || a.Status == ApartmentAvailabilityStatus.Maintenance).ToList();
+
+            // Get related data
+            foreach(var apartment in availableApartments)
+            {
+                // Get Building details
+                var builingBelongs = _context.Buildings.Where(a => a.Id == apartment.BuildingId).FirstOrDefault();
+
+                if (builingBelongs != null)
+                    apartment.Building = builingBelongs;
+
+                // Get Parking details
+                var assignedParkingSpace = _context.ParkingSpaces.Where(a => a.Id == apartment.ParkingSpaceId).FirstOrDefault();
+
+                if (assignedParkingSpace != null)
+                    apartment.ParkingSpace = assignedParkingSpace;
+
+                // Get class details
+                var classOfApartment = _context.ApartmentClasses.Where(a => a.Id == apartment.ApartmentClassId).FirstOrDefault();
+
+                if (classOfApartment != null)
+                    apartment.ApartmentClass = classOfApartment;
+            }
+
+            var query = availableApartments.AsQueryable();
+
+            // Filter
+            if (!string.IsNullOrEmpty(location))
+                query = query.Where(a => a.Building.Location.Trim().Replace(" ", "").ToLower() == location.Trim().Replace(" ", "").ToLower());
+            if (!string.IsNullOrEmpty(apartmentType))
+                query = query.Where(a => a.ApartmentClass.Name.Trim().Replace(" ", "").ToLower() == apartmentType.Trim().Replace(" ", "").ToLower());
+
+            // Map to result
+            List<ApartmentGetDto> mappedApartments = new List<ApartmentGetDto>();
+
+            //var list = query.ToList();
+
+            foreach (var apartment in query.ToList())
+            {
+                var mappedItem = _mapper.Map<ApartmentGetDto>(apartment);
+
+                mappedItem.BuildingName = apartment.Building.Name;
+                mappedItem.BuildingLocation = apartment.Building.Location;
+                mappedItem.ReservedParkingSpace = apartment.ParkingSpace.LotNo;
+                mappedItem.ApartmentClassName = apartment.ApartmentClass.Name;
+
+                mappedApartments.Add(mappedItem);
+            }
+
+            return mappedApartments;
+
+        }
+
         public ICollection<ApartmentClassFacilitiesDto> GetApartmentClasses()
         {
             var apartmentClasses = _context.ApartmentClasses.ToList();
