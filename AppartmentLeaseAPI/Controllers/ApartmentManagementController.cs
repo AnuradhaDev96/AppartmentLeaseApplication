@@ -22,6 +22,7 @@ namespace AppartmentLeaseAPI.Controllers
             _mapper = mapper;
         }
 
+        #region Apartment Classes
         [Authorize]
         [HttpGet("ApartmentClasses")]
         [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentClassFacilitiesDto>)))]
@@ -42,6 +43,61 @@ namespace AppartmentLeaseAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("ApartmentClasses/PricingDetails")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentPricingGetDto>)))]
+        [ProducesResponseType(404)]
+        public IActionResult GetLeaseAgreementPricingDetails([FromQuery] ApartmentPricingFilterQuery filter)
+        {
+            try
+            {
+                var apartmentClass = _apartmentManagementRepository.GetApartmentClassDetails(filter.ApartmentId);
+
+                if (apartmentClass == null)
+                    return NotFound("Apartment class not found");
+
+                if (filter.PurchaseParkingSpaceId > 0)
+                {
+                    // User is purchasing an additional parking. But need to check exist
+                    var parkingSpace = _apartmentManagementRepository.GetParkingSpaceById(filter.PurchaseParkingSpaceId);
+                    if (parkingSpace == null)
+                        return NotFound("Invalid parking space id");
+
+
+                    if (parkingSpace.Status == Data.Enums.ParkingSpaceStatus.Reserved || parkingSpace.Status == Data.Enums.ParkingSpaceStatus.Purchased)
+                    {
+                        return NotFound("This parking space is not available");
+                    }
+                }
+
+                var leasePeriodInDays = (filter.LeaseEndDate - filter.LeaseStartDate).Days;
+                int leasePeriodInMonths = leasePeriodInDays / 30;
+                var refundableAmount = apartmentClass.RefundableDepositAmount;
+                var costForLeasePeriod = leasePeriodInMonths * apartmentClass.PricePerMonth;
+                costForLeasePeriod += refundableAmount;
+
+                if (filter.PurchaseParkingSpaceId > 0)
+                    costForLeasePeriod += 5000.00 * leasePeriodInMonths;
+
+                var calculationResult = new ApartmentPricingGetDto
+                {
+                    PricePerMonth = apartmentClass.PricePerMonth,
+                    RefundableDepositAmount = apartmentClass.RefundableDepositAmount,
+                    AdditionalParkingUnitPrice = filter.PurchaseParkingSpaceId > 0 ? 5000.00 : 0,
+                    LeasePeriod = leasePeriodInMonths,
+                    TotalCost = costForLeasePeriod
+                };
+
+                return Ok(calculationResult);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
 
         #region Apartments
 
@@ -115,6 +171,5 @@ namespace AppartmentLeaseAPI.Controllers
         }
 
         #endregion
-
     }
 }

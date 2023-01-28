@@ -39,7 +39,8 @@
             Available Apartments
         </TextBlock>
 
-        <ListView x:Name="AvailableApartmentList" Grid.Row="1" Grid.Column="2" MinWidth="250" MinHeight="300" Margin="10 0 10 80">
+        <ListView x:Name="AvailableApartmentList" Grid.Row="1" Grid.Column="2" MinWidth="250" 
+                  MinHeight="300" Margin="10 0 10 80" SelectedItem="{Binding SelectedApartment}">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>

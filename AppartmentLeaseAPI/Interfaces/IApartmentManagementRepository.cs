@@ -1,4 +1,5 @@
-﻿using AppartmentLeaseAPI.Dtos;
+﻿using AppartmentLeaseAPI.Data.Enums;
+using AppartmentLeaseAPI.Dtos;
 using AppartmentLeaseAPI.Models.Apartments;
 
 namespace AppartmentLeaseAPI.Interfaces
@@ -14,5 +15,11 @@ namespace AppartmentLeaseAPI.Interfaces
         ICollection<ParkingSpace> GetAvailableParkingSpaces();
 
         ApartmentClass? GetApartmentClassDetails(int apartmentId);
+
+        ParkingSpace? GetParkingSpaceById(int parkingSpaceId);
+
+        bool UpdateApartmentStatus(int apartmentId, ApartmentAvailabilityStatus statusToUpdate);
+
+        bool UpdateParkingSpaceStatus(int parkingSpaceId, ParkingSpaceStatus statusToUpdate);
     }
 }

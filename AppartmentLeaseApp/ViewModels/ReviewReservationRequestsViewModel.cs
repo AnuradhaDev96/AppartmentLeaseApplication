@@ -111,7 +111,8 @@ namespace AppartmentLeaseApp.ViewModels
             await _windowManager.ShowWindowAsync(
                 new AvailableApartmentsForReservationInquiryViewModel(
                     selectedRequiry: _selectedItem, 
-                    apartmentManagementEndpoint: _simpleContainer.GetInstance<IApartmentManagementEndpoint>()));
+                    apartmentManagementEndpoint: _simpleContainer.GetInstance<IApartmentManagementEndpoint>(),
+                    windowManager: _simpleContainer.GetInstance<IWindowManager>()));
         }
         #endregion
     }

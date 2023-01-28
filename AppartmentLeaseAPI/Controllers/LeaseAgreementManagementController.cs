@@ -111,17 +111,29 @@ namespace AppartmentLeaseAPI.Controllers
                 EndtDate = data.EndtDate,
                 PurchasedParkingSpaceId = data.PurchasedParkingSpaceId,
             };
-            #endregion
+            
 
             var createdLeaseAgreementId = await _leaseAgreementManagementRepository.CreateLeaseAgreement(newLeaseAgreement);
             if (createdLeaseAgreementId == null)
             {
                 return BadRequest("Lease agreement cannot be created");
             }
+            #endregion
 
-            //Update Apartment status
+            //Update Apartment status to Occupied
+            if (!_apartmentManagementRepository.UpdateApartmentStatus(apartmentId: data.ApartmentId, statusToUpdate: Data.Enums.ApartmentAvailabilityStatus.Occupied))
+            {
+                return BadRequest("Apartment status cannot be updated to Occupied");
+            }
 
-            //Update Parking space to Purchased
+            //Update Selected Parking space status to Purchased
+            if (data.PurchasedParkingSpaceId != null || data.PurchasedParkingSpaceId > 0)
+            {
+                if (!_apartmentManagementRepository.UpdateParkingSpaceStatus(parkingSpaceId: data.PurchasedParkingSpaceId ?? -1, statusToUpdate: Data.Enums.ParkingSpaceStatus.Purchased))
+                {
+                    return BadRequest("Apartment status cannot be updated to Occupied");
+                }
+            }                
 
             // Update reservation inquiry
             if (!_anonymousManagementRepository.UpdateReservationInquiryToLeaseCreated(inquiryId: data.ReservationInquiryId, leaseAgreementId: createdLeaseAgreementId ?? -1))
@@ -130,6 +142,6 @@ namespace AppartmentLeaseAPI.Controllers
             }
 
             return Ok(@$"Lease Agreement created successfully with id {createdLeaseAgreementId}");
-        }
+        }        
     }
 }
