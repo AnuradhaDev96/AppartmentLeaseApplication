@@ -169,7 +169,9 @@ namespace AppartmentLeaseApp.ViewModels
             await _windowManager.ShowWindowAsync(new CreateLeaseAgreementForCustomerViewModel(
                 selectedApartment: SelectedApartment,
                 selectedRequiry: _selectedRequiry,
-                selectedParkingSpaceForPurchase: SelectedParkingSpace));
+                selectedParkingSpaceForPurchase: SelectedParkingSpace,
+                apartmentManagementEndpoint: _apartmentManagementEndpoint,
+                windowManager: _windowManager));
             
             
         }

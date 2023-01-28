@@ -1,5 +1,6 @@
 ﻿using AppartmentLeaseApp.Interfaces;
 using AppartmentLeaseApp.Models.Apartments;
+using AppartmentLeaseApp.Models.LeaseAgreement;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -52,6 +53,37 @@ namespace AppartmentLeaseApp.ApiProviders
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     var result = await responseMessage.Content.ReadAsAsync<List<ApartmentsResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
+        public async Task<LeaseAgreementPricingGetResponse?> GetApartmentPricingDetails(int apartmentId, int? purchasedParkingId, DateTime leaseStartDate, DateTime leaseEndDate)
+        {
+            StringBuilder stringBuilder = new StringBuilder("ApartmentManagement/ApartmentClasses/PricingDetails?");
+
+            NameValueCollection queryParams = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+            queryParams.Add("ApartmentId", apartmentId.ToString());
+            queryParams.Add("LeaseStartDate", leaseStartDate.ToString());
+            queryParams.Add("LeaseEndDate", leaseEndDate.ToString());
+
+            if (purchasedParkingId != null || purchasedParkingId > 0)
+                queryParams.Add("PurchaseParkingSpaceId", purchasedParkingId.ToString());
+
+            stringBuilder.Append(queryParams.ToString());
+
+            var res = stringBuilder.ToString();
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: stringBuilder.ToString()))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<LeaseAgreementPricingGetResponse?>();
 
                     return result;
                 }

@@ -1,11 +1,14 @@
-﻿using AppartmentLeaseApp.Models.AnonymousModels;
+﻿using AppartmentLeaseApp.Interfaces;
+using AppartmentLeaseApp.Models.AnonymousModels;
 using AppartmentLeaseApp.Models.Apartments;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AppartmentLeaseApp.ViewModels
 {
@@ -14,12 +17,19 @@ namespace AppartmentLeaseApp.ViewModels
         private ReservationRequestResponse _selectedRequiry;
         private ParkingSpaceResponse? _selectedParkingSpaceForPurchase;
         private ApartmentsResponse _selectedApartment;
+        private IApartmentManagementEndpoint _apartmentManagementEndpoint;
+        private IWindowManager _windowManager;
 
-        public CreateLeaseAgreementForCustomerViewModel(ReservationRequestResponse selectedRequiry, ApartmentsResponse selectedApartment, ParkingSpaceResponse? selectedParkingSpaceForPurchase)
+        public CreateLeaseAgreementForCustomerViewModel(ReservationRequestResponse selectedRequiry, ApartmentsResponse selectedApartment, 
+            ParkingSpaceResponse? selectedParkingSpaceForPurchase, IApartmentManagementEndpoint apartmentManagementEndpoint,
+            IWindowManager windowManager)
         {
             _selectedRequiry = selectedRequiry;
             _selectedParkingSpaceForPurchase = selectedParkingSpaceForPurchase;
             _selectedApartment = selectedApartment;
+
+            _apartmentManagementEndpoint = apartmentManagementEndpoint;
+            _windowManager = windowManager;
         }
 
         protected override void OnViewLoaded(object view)
@@ -268,6 +278,44 @@ namespace AppartmentLeaseApp.ViewModels
                 _totalCost = value;
                 NotifyOfPropertyChange(() => TotalCost);
             }
+        }
+        #endregion
+
+        #region User Actions
+        public async void CalculateCost()
+        {
+            try
+            {
+                var pricingDetails = await _apartmentManagementEndpoint.GetApartmentPricingDetails(
+                    apartmentId: _selectedApartment.Id, 
+                    purchasedParkingId: _selectedParkingSpaceForPurchase == null ? null : _selectedParkingSpaceForPurchase.Id, 
+                    leaseStartDate: LeaseStartDate, 
+                    leaseEndDate: LeaseEndDate);
+                
+                if (pricingDetails != null)
+                {
+                    PricePerMonth = pricingDetails.PricePerMonth;
+                    RefundableDepositAmount = pricingDetails.RefundableDepositAmount;
+                    AdditionalParkingUnitPrice = pricingDetails.AdditionalParkingUnitPrice;
+                    LeasePeriod = pricingDetails.LeasePeriod;
+                    TotalCost = pricingDetails.TotalCost;
+                }
+            }
+            catch (Exception e)
+            {
+                await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Please try again to calculate cost."), null, GetDialogWindowSettings());
+            }
+        }
+
+        private dynamic GetDialogWindowSettings()
+        {
+            dynamic settings = new ExpandoObject();
+            settings.WindowStyle = WindowStyle.ToolWindow;
+            settings.ShowInTaskbar = true;
+            settings.Title = "Alert";
+            settings.WindowState = WindowState.Normal;
+            settings.ResizeMode = ResizeMode.NoResize;
+            return settings;
         }
         #endregion
     }
