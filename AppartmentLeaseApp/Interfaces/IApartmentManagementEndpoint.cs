@@ -1,4 +1,5 @@
 ﻿using AppartmentLeaseApp.Models.Apartments;
+using AppartmentLeaseApp.Models.LeaseAgreement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace AppartmentLeaseApp.Interfaces
         Task<List<ApartmentsResponse>> FilterAvailableApartments(string location, string apartmentType);
 
         Task<List<ParkingSpaceResponse>> GetAvailableParkingSpaces();
+
+        Task<LeaseAgreementPricingGetResponse?> GetApartmentPricingDetails(int apartmentId, int? purchasedParkingId, DateTime leaseStartDate, DateTime leaseEndDate);
     }
 }

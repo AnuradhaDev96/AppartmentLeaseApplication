@@ -73,6 +73,13 @@ namespace AppartmentLeaseAPI.Repositories
 
         }
 
+        public ApartmentClass? GetApartmentClassDetails(int apartmentId)
+        {
+            var apartment = _context.Apartments.Where(ap => ap.Id == apartmentId).FirstOrDefault();
+
+            return _context.ApartmentClasses.Where(a => a.Id == apartment.ApartmentClassId).FirstOrDefault();
+        }
+
         public ICollection<ApartmentClassFacilitiesDto> GetApartmentClasses()
         {
             var apartmentClasses = _context.ApartmentClasses.ToList();
@@ -135,6 +142,47 @@ namespace AppartmentLeaseAPI.Repositories
         public ICollection<ParkingSpace> GetAvailableParkingSpaces()
         {
             return _context.ParkingSpaces.Where(p => p.Status == ParkingSpaceStatus.Available).ToList();
+        }
+
+        public bool UpdateApartmentStatus(int apartmentId, ApartmentAvailabilityStatus statusToUpdate)
+        {
+            var apartmentToUpdate = _context.Apartments.Where(a => a.Id == apartmentId).FirstOrDefault();
+
+            if (apartmentToUpdate == null)
+                return false;
+
+            apartmentToUpdate.Status = statusToUpdate;
+
+            _context.Apartments.Update(apartmentToUpdate);
+
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
+
+        public bool UpdateParkingSpaceStatus(int parkingSpaceId, ParkingSpaceStatus statusToUpdate)
+        {
+            var parkingSpaceToUpdate = _context.ParkingSpaces.Where(p => p.Id == parkingSpaceId).FirstOrDefault();
+
+            if (parkingSpaceToUpdate == null)
+                return false;
+
+            parkingSpaceToUpdate.Status = statusToUpdate;
+
+            _context.ParkingSpaces.Update(parkingSpaceToUpdate);
+
+            return Save();
+        }
+
+        public ParkingSpace? GetParkingSpaceById(int parkingSpaceId)
+        {
+            var parkingSpace = _context.ParkingSpaces.Where(ap => ap.Id == parkingSpaceId).FirstOrDefault();
+
+            return parkingSpace;
         }
     }
 }

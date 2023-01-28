@@ -5,22 +5,29 @@ using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AppartmentLeaseApp.ViewModels
 {
     public class AvailableApartmentsForReservationInquiryViewModel : Screen
     {
         private IApartmentManagementEndpoint _apartmentManagementEndpoint;
+        private ILeaseAgreementManagementEndpoint _leaseAgreementManagementEndpoint;
         private List<ApartmentsResponse>? _apartmentList;
         private ReservationRequestResponse _selectedRequiry;
+        private IWindowManager _windowManager;
 
-        public AvailableApartmentsForReservationInquiryViewModel(IApartmentManagementEndpoint apartmentManagementEndpoint, ReservationRequestResponse selectedRequiry)
+        public AvailableApartmentsForReservationInquiryViewModel(IApartmentManagementEndpoint apartmentManagementEndpoint, 
+            ReservationRequestResponse selectedRequiry, IWindowManager windowManager, ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint)
         {
             _apartmentManagementEndpoint = apartmentManagementEndpoint;
+            _leaseAgreementManagementEndpoint = leaseAgreementManagementEndpoint;
             _selectedRequiry = selectedRequiry;
+            _windowManager = windowManager;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -50,6 +57,18 @@ namespace AppartmentLeaseApp.ViewModels
             {
                 _availableApartmentList = value;
                 NotifyOfPropertyChange(() => AvailableApartmentList);
+            }
+        }
+        
+        private ApartmentsResponse? _selectedApartment;
+
+        public ApartmentsResponse? SelectedApartment
+        {
+            get { return _selectedApartment; }
+            set
+            {
+                _selectedApartment = value;
+                NotifyOfPropertyChange(() => SelectedApartment);
             }
         }
 
@@ -131,6 +150,45 @@ namespace AppartmentLeaseApp.ViewModels
         {
             var filteredList = await _apartmentManagementEndpoint.FilterAvailableApartments(location: ByLocation ?? "", apartmentType: ByApartmentType ?? "");
             AvailableApartmentList = new BindingList<ApartmentsResponse>(filteredList);
+        }
+        #endregion
+
+        #region Decision Buttons
+        public async void CreateLeaseAgreement()
+        {
+            if (_selectedRequiry.Status == "LeaseCreated")
+            {
+                await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Sorry! This inquiry has Lease Agreement."), null, GetDialogWindowSettings());
+                return;
+            }
+
+            if (SelectedApartment == null)
+            {                
+                await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Select Apartment to Continue"), null, GetDialogWindowSettings());
+                return;
+            }
+            
+            await TryCloseAsync();
+            await _windowManager.ShowWindowAsync(new CreateLeaseAgreementForCustomerViewModel(
+                selectedApartment: SelectedApartment,
+                selectedRequiry: _selectedRequiry,
+                selectedParkingSpaceForPurchase: SelectedParkingSpace,
+                apartmentManagementEndpoint: _apartmentManagementEndpoint,
+                leaseAgreementManagementEndpoint: _leaseAgreementManagementEndpoint,
+                windowManager: _windowManager));
+            
+            
+        }
+
+        private dynamic GetDialogWindowSettings()
+        {
+            dynamic settings = new ExpandoObject();
+            settings.WindowStyle = WindowStyle.ToolWindow;
+            settings.ShowInTaskbar = true;
+            settings.Title = "Alert";
+            settings.WindowState = WindowState.Normal;
+            settings.ResizeMode = ResizeMode.NoResize;
+            return settings;
         }
         #endregion
     }

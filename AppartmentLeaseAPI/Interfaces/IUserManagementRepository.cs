@@ -9,5 +9,7 @@ namespace AppartmentLeaseAPI.Interfaces
         UserModel? GetUserByEmail(string email);
 
         UserModel? GetUserByCredentials(string username, string password);
+
+        Task<int?> CreateSystemUser(UserModel user);
     }
 }

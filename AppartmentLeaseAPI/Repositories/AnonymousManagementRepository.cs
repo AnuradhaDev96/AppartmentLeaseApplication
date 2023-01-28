@@ -26,17 +26,38 @@ namespace AppartmentLeaseAPI.Repositories
             return reservationInquiries;
         }
 
-        public bool isPendingStatusInquiryExistForTelephoneNumber(string telephoneNumber)
+        public bool IsPendingStatusInquiryExistForTelephoneNumber(string telephoneNumber)
         {
             return _dataContext.ReservationInquiries.Any(
                 rq => rq.TelephoneNo == telephoneNumber.Trim().Replace(" ", "") 
                 && rq.Status == InquiryStatus.PendingResponse);
         }
 
+        public bool IsReservationInquiryExist(int inquiryId)
+        {
+            return _dataContext.ReservationInquiries.Any(r => r.Id == inquiryId);
+        }
+
         public bool Save()
         {
             var saved = _dataContext.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool UpdateReservationInquiryToLeaseCreated(int inquiryId, int leaseAgreementId)
+        {
+            var reservationInquiry = _dataContext.ReservationInquiries.Where(r => r.Id == inquiryId).FirstOrDefault();
+
+            if (reservationInquiry == null)
+                return false;
+
+            reservationInquiry.Status = InquiryStatus.LeaseCreated;
+            reservationInquiry.LeaseAgreementId = leaseAgreementId;
+
+            _dataContext.ReservationInquiries.Update(reservationInquiry);
+
+            return Save();
+
         }
     }
 }

@@ -30,7 +30,7 @@ namespace AppartmentLeaseAPI.Controllers
             if (data == null)
                 return BadRequest(ModelState);
 
-            if (_anonymousManagementRepository.isPendingStatusInquiryExistForTelephoneNumber(data.TelephoneNo))
+            if (_anonymousManagementRepository.IsPendingStatusInquiryExistForTelephoneNumber(data.TelephoneNo))
             {
                 return Ok("Request already exists. Our agents will contact you soon.");
             }
