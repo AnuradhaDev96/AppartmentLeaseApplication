@@ -22,7 +22,7 @@
             Alert!
         </TextBlock>
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
-            <TextBlock FontSize="18" x:Name="MessageToDisplay"></TextBlock>
+            <TextBlock FontSize="18" x:Name="MessageToDisplay" TextWrapping="Wrap" MaxWidth="350"></TextBlock>
             <Button x:Name="OkButton" Margin="0 10 0 0">
                 OK
             </Button>

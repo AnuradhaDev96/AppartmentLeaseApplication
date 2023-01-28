@@ -1,6 +1,7 @@
 ﻿using AppartmentLeaseApp.Interfaces;
 using AppartmentLeaseApp.Models.AnonymousModels;
 using AppartmentLeaseApp.Models.Apartments;
+using AppartmentLeaseApp.Models.LeaseAgreement;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
@@ -18,17 +19,19 @@ namespace AppartmentLeaseApp.ViewModels
         private ParkingSpaceResponse? _selectedParkingSpaceForPurchase;
         private ApartmentsResponse _selectedApartment;
         private IApartmentManagementEndpoint _apartmentManagementEndpoint;
+        private ILeaseAgreementManagementEndpoint _leaseAgreementManagementEndpoint;
         private IWindowManager _windowManager;
 
         public CreateLeaseAgreementForCustomerViewModel(ReservationRequestResponse selectedRequiry, ApartmentsResponse selectedApartment, 
             ParkingSpaceResponse? selectedParkingSpaceForPurchase, IApartmentManagementEndpoint apartmentManagementEndpoint,
-            IWindowManager windowManager)
+            IWindowManager windowManager, ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint)
         {
             _selectedRequiry = selectedRequiry;
             _selectedParkingSpaceForPurchase = selectedParkingSpaceForPurchase;
             _selectedApartment = selectedApartment;
 
             _apartmentManagementEndpoint = apartmentManagementEndpoint;
+            _leaseAgreementManagementEndpoint = leaseAgreementManagementEndpoint;
             _windowManager = windowManager;
         }
 
@@ -304,6 +307,46 @@ namespace AppartmentLeaseApp.ViewModels
             catch (Exception e)
             {
                 await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Please try again to calculate cost."), null, GetDialogWindowSettings());
+            }
+        }
+
+        public async void CreateLeaseAgreement()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(FullName) || string.IsNullOrEmpty(Address) || string.IsNullOrEmpty(NICPassportNo) ||
+                    string.IsNullOrEmpty(EmergencyContactNo) || string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)
+                    || string.IsNullOrEmpty(Email))
+                {
+                    await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Please provide required information."), null, GetDialogWindowSettings());
+                }
+                else
+                {
+
+                    var createData = new CreateLeaseAgreementModel
+                    {
+                        ReservationInquiryId = _selectedRequiry.Id,
+                        StartDate = LeaseStartDate,
+                        EndtDate = LeaseEndDate,
+                        PurchasedParkingSpaceId = _selectedParkingSpaceForPurchase == null ? null : _selectedParkingSpaceForPurchase.Id,
+                        ApartmentId = _selectedApartment.Id,
+                        FullName = FullName,
+                        Address = Address,
+                        NICPassportNo = NICPassportNo,
+                        EmergencyContactNo = EmergencyContactNo,
+                        Username = Username,
+                        Password = Password,
+                        Email = Email
+                    };
+
+                    var result = await _leaseAgreementManagementEndpoint.CreateLeaseAgreementForGuestUser(createData);
+
+                    await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Lease agreement created successfully. Provide user credentials for customer."), null, GetDialogWindowSettings());
+                }
+            }
+            catch (Exception e)
+            {
+                await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Error occured while creating lease agreement."), null, GetDialogWindowSettings());
             }
         }
 

@@ -16,13 +16,16 @@ namespace AppartmentLeaseApp.ViewModels
     public class AvailableApartmentsForReservationInquiryViewModel : Screen
     {
         private IApartmentManagementEndpoint _apartmentManagementEndpoint;
+        private ILeaseAgreementManagementEndpoint _leaseAgreementManagementEndpoint;
         private List<ApartmentsResponse>? _apartmentList;
         private ReservationRequestResponse _selectedRequiry;
         private IWindowManager _windowManager;
 
-        public AvailableApartmentsForReservationInquiryViewModel(IApartmentManagementEndpoint apartmentManagementEndpoint, ReservationRequestResponse selectedRequiry, IWindowManager windowManager)
+        public AvailableApartmentsForReservationInquiryViewModel(IApartmentManagementEndpoint apartmentManagementEndpoint, 
+            ReservationRequestResponse selectedRequiry, IWindowManager windowManager, ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint)
         {
             _apartmentManagementEndpoint = apartmentManagementEndpoint;
+            _leaseAgreementManagementEndpoint = leaseAgreementManagementEndpoint;
             _selectedRequiry = selectedRequiry;
             _windowManager = windowManager;
         }
@@ -171,6 +174,7 @@ namespace AppartmentLeaseApp.ViewModels
                 selectedRequiry: _selectedRequiry,
                 selectedParkingSpaceForPurchase: SelectedParkingSpace,
                 apartmentManagementEndpoint: _apartmentManagementEndpoint,
+                leaseAgreementManagementEndpoint: _leaseAgreementManagementEndpoint,
                 windowManager: _windowManager));
             
             
