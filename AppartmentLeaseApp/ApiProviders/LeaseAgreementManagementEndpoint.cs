@@ -35,5 +35,22 @@ namespace AppartmentLeaseApp.ApiProviders
                 }
             }
         }
+
+        public async Task<List<LeaseAgreementSummaryResponse>>? GetLeaseAgreementsByChiefOccupant(int chiefOccupantId)
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: @$"LeaseAgreementManagement/LeaseAgreements/ChiefOccupant/{chiefOccupantId}"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<LeaseAgreementSummaryResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
     }
 }

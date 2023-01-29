@@ -1,9 +1,12 @@
-﻿using AppartmentLeaseAPI.Models.LeaseManagement;
+﻿using AppartmentLeaseAPI.Dtos;
+using AppartmentLeaseAPI.Models.LeaseManagement;
 
 namespace AppartmentLeaseAPI.Interfaces
 {
     public interface ILeaseAgreementManagementRepository
     {
         Task<int?> CreateLeaseAgreement(LeaseAgreement leaseAgreement);
+
+        ICollection<LeaseAgreement>? GetLeaseAgreementsByChiefOccupantId(int chiefOccupantId);
     }
 }

@@ -16,6 +16,8 @@ namespace AppartmentLeaseAPI.Interfaces
 
         ApartmentClass? GetApartmentClassDetails(int apartmentId);
 
+        Apartment? GetApartment(int apartmentId);
+
         ParkingSpace? GetParkingSpaceById(int parkingSpaceId);
 
         bool UpdateApartmentStatus(int apartmentId, ApartmentAvailabilityStatus statusToUpdate);

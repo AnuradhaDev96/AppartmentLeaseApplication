@@ -10,5 +10,7 @@ namespace AppartmentLeaseApp.Interfaces
     public interface ILeaseAgreementManagementEndpoint
     {
         Task<string?> CreateLeaseAgreementForGuestUser(CreateLeaseAgreementModel createLeaseAgreementModel);
+
+        Task<List<LeaseAgreementSummaryResponse>>? GetLeaseAgreementsByChiefOccupant(int chiefOccupantId);
     }
 }

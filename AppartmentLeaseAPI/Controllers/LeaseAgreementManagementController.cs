@@ -142,6 +142,58 @@ namespace AppartmentLeaseAPI.Controllers
             }
 
             return Ok(@$"Lease Agreement created successfully with id {createdLeaseAgreementId}");
-        }        
+        }
+
+        [Authorize]
+        [HttpGet("LeaseAgreements/ChiefOccupant/{chiefOccupantId}")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<LeaseAgreementSummaryGetDto>)))]
+        public IActionResult GetLeaseAgreementByChiefOccupant(int chiefOccupantId)
+        {
+            try
+            {
+                var leaseAgreements = _leaseAgreementManagementRepository.GetLeaseAgreementsByChiefOccupantId(chiefOccupantId);
+
+                var summaryList = new List<LeaseAgreementSummaryGetDto>();
+
+                if (leaseAgreements == null)
+                {
+                    return Ok(summaryList);
+                }
+
+                foreach (var leaseAgreement in leaseAgreements)
+                {
+                    var assignedApartment = _apartmentManagementRepository.GetApartment(leaseAgreement.ApartmentId);
+                    
+                    string downPaymentStatus = "Payment Done";
+                    if (!leaseAgreement.IsMonthAdvancePaid || !leaseAgreement.IsRefundableDepositPaid)
+                    {
+                        downPaymentStatus = "Pending Payment";
+                    }
+
+                    var summary = new LeaseAgreementSummaryGetDto
+                    {
+                        AgreementId = leaseAgreement.Id,
+                        Status = leaseAgreement.Status,
+                        DownPaymentStatus = downPaymentStatus,
+                        LeaseEndDate = leaseAgreement.EndtDate,
+                        LeaseStartDate = leaseAgreement.StartDate,
+                        ApartmentId = leaseAgreement.ApartmentId,
+                        ApartmentClassName = assignedApartment.ApartmentClass.Name,
+                        BuildingName = assignedApartment.Building.Name,
+                        BuildingLocation = assignedApartment.Building.Location,
+                        MaximumOccupantCount = assignedApartment.ApartmentClass.MaximumOccupantCount
+                    };
+
+                    summaryList.Add(summary);
+
+                }
+                
+                return Ok(summaryList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

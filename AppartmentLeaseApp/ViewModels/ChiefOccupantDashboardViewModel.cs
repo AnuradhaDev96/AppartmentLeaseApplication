@@ -7,13 +7,20 @@ using System.Threading.Tasks;
 
 namespace AppartmentLeaseApp.ViewModels
 {
-    public class ChiefOccupantDashboardViewModel : Screen
+    public class ChiefOccupantDashboardViewModel : Conductor<Screen>
     {
         private SimpleContainer _simpleContainer;
+
 
         public ChiefOccupantDashboardViewModel(SimpleContainer simpleContainer)
         {
             _simpleContainer = simpleContainer;
         }
+
+        public async void MyLeaseAgreementsPage()
+        {
+            await ActivateItemAsync(_simpleContainer.GetInstance<ChiefAccoupantMyLeaseAgreementsViewModel>());
+        }
+
     }
 }

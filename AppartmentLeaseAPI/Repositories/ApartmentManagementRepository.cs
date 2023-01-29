@@ -184,5 +184,19 @@ namespace AppartmentLeaseAPI.Repositories
 
             return parkingSpace;
         }
+
+        public Apartment? GetApartment(int apartmentId)
+        {
+            var apartment = _context.Apartments.Where(a => a.Id == apartmentId).FirstOrDefault();
+            // Get Building details
+            var builingBelongs = _context.Buildings.Where(a => a.Id == apartment.BuildingId).FirstOrDefault();
+            apartment.Building = builingBelongs;
+
+            // Get class details
+            var classOfApartment = _context.ApartmentClasses.Where(a => a.Id == apartment.ApartmentClassId).FirstOrDefault();
+            apartment.ApartmentClass = classOfApartment;
+
+            return apartment;
+        }
     }
 }
