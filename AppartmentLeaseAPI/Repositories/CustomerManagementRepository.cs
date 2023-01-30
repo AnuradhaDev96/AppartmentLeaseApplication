@@ -19,6 +19,12 @@ namespace AppartmentLeaseAPI.Repositories
             return newChiefOccupant.Entity.Id;
         }
 
+        public bool CreateDependantByChiefOccupantId(Dependant dependant)
+        {
+            _context.Dependants.Add(dependant);
+            return Save();
+        }
+
         public ChiefOccupant? GetChiefOccupantBySystemUserId(int systemUserId)
         {
             return _context.ChiefOccupants.FirstOrDefault(c => c.SystemUserId == systemUserId);
@@ -27,6 +33,12 @@ namespace AppartmentLeaseAPI.Repositories
         public ICollection<Dependant>? GetDependantsByChiefOccupantId(int chiefOccupantId)
         {
             return _context.Dependants.Where(d => d.ChiefOccupantId == chiefOccupantId).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

@@ -78,7 +78,8 @@ namespace AppartmentLeaseApp.ViewModels
             await _dialogWindowHelper.ShowPopUpWindow(new ChiefOccupantDependantManagementViewModel(
                 selectedLeaseAgreementSummary: SelectedLeaseAgreement,
                 loggedInUser: _loggedInUser,
-                leaseAgreementManagementEndpoint: _leaseAgreementManagementEndpoint));
+                leaseAgreementManagementEndpoint: _leaseAgreementManagementEndpoint,
+                dialogWindowHelper: _dialogWindowHelper));
 
         }
 

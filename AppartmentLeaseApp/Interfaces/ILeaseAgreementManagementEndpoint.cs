@@ -15,5 +15,7 @@ namespace AppartmentLeaseApp.Interfaces
         Task<List<LeaseAgreementSummaryResponse>>? GetLeaseAgreementsByLoggedUser(int userId);
 
         Task<List<DependantResponseModel>>? GetDependantsByLoggedUser(int userId, int selectedLeaseAgreementId);
+
+        Task<string?> CreateDependantByChiefOccupantUserId(int leaseAgreementId, int userId, DependantCreateModel dependantCreateModel);
     }
 }

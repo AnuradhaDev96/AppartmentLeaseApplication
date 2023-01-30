@@ -237,5 +237,54 @@ namespace AppartmentLeaseAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpPost("LeaseAgreements/{leaseAgreementId}/User/{userId}/Dependants")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult AddDependantByChiefOccupantUserId(int leaseAgreementId, int userId, [FromBody] DependantCreateDto dependantCreateDto)
+        {
+            try 
+            {
+                var chiefOccupant = _customerManagementRepository.GetChiefOccupantBySystemUserId(userId);
+                if (chiefOccupant == null)
+                    return NotFound("Chief occupant does not exist for this user.");
+
+                #region Maximum occupant count validation
+
+                var selectedLeaseAgreement = _leaseAgreementManagementRepository.GetLeaseAgreementByAgreementId(leaseAgreementId);
+
+                if (selectedLeaseAgreement == null || selectedLeaseAgreement.Status == Data.Enums.LeaseAgreementStatus.Extended ||
+                    selectedLeaseAgreement.Status == Data.Enums.LeaseAgreementStatus.Ended)
+                    return NotFound("You are not allowed to edit dependants under this lease agreement");
+
+                var assignedApartment = _apartmentManagementRepository.GetApartment(selectedLeaseAgreement.ApartmentId);
+
+                if (assignedApartment == null)
+                    return NotFound("Apartment does not exist for this lease agreement");
+
+                var currentDependants = _customerManagementRepository.GetDependantsByChiefOccupantId(chiefOccupant.Id);
+                // Add 1 because chief occupant is also included
+                int currentSavedOccupantCount = currentDependants == null ? 1 : currentDependants.Count + 1;
+                if (currentSavedOccupantCount >= assignedApartment.ApartmentClass.MaximumOccupantCount)
+                    return NotFound("Maximum Occupant count exceeds. You can't add more dependants.");
+                #endregion
+
+                var createData = _mapper.Map<Dependant>(dependantCreateDto);
+                createData.ChiefOccupantId = chiefOccupant.Id;
+
+                if (!_customerManagementRepository.CreateDependantByChiefOccupantId(createData))
+                {
+                    return NotFound("Error occured while saving");
+                }
+
+                return Ok("Dependant added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

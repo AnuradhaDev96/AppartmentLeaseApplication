@@ -25,6 +25,9 @@ namespace AppartmentLeaseAPI.Helpers
 
             CreateMap<Dependant, DependantGetDto>();
             CreateMap<DependantGetDto, Dependant>();
+
+            CreateMap<Dependant, DependantCreateDto>();
+            CreateMap<DependantCreateDto, Dependant>();
         }
     }
 }

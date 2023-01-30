@@ -9,5 +9,7 @@ namespace AppartmentLeaseAPI.Interfaces
         ChiefOccupant? GetChiefOccupantBySystemUserId(int systemUserId);
 
         ICollection<Dependant>? GetDependantsByChiefOccupantId(int chiefOccupantId);
+
+        bool CreateDependantByChiefOccupantId(Dependant dependant);
     }
 }

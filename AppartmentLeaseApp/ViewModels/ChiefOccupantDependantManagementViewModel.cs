@@ -17,6 +17,7 @@ namespace AppartmentLeaseApp.ViewModels
         private LeaseAgreementSummaryResponse _selectedLeaseAgreementSummary;
         private ILoggedInUser _loggedInUser;
         private ILeaseAgreementManagementEndpoint _leaseAgreementManagementEndpoint;
+        private IDialogWindowHelper _dialogWindowHelper;
         private List<string> _relationships = new()
         {
             "Spouse",
@@ -27,11 +28,12 @@ namespace AppartmentLeaseApp.ViewModels
         };
 
         public ChiefOccupantDependantManagementViewModel(LeaseAgreementSummaryResponse selectedLeaseAgreementSummary, ILoggedInUser loggedInUser,
-            ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint)
+            ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint, IDialogWindowHelper dialogWindowHelper)
         {
             _selectedLeaseAgreementSummary = selectedLeaseAgreementSummary;
             _loggedInUser = loggedInUser;
             _leaseAgreementManagementEndpoint = leaseAgreementManagementEndpoint;
+            _dialogWindowHelper = dialogWindowHelper;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -221,12 +223,35 @@ namespace AppartmentLeaseApp.ViewModels
             }
         }
 
-        public void AddDependant()
+        public async void AddDependant()
         {
             var value = SelectedRelationship;//null
             var val2 = SelectedDependant;//null
             var val3 = SelectedDependantId;//0
             var val4 = DependantFullName;//null
+
+            if (string.IsNullOrEmpty(DependantFullName) || string.IsNullOrEmpty(SelectedRelationship))
+            {
+                await _dialogWindowHelper.ShowDialogWindow("Please provide required fields.");
+                return;
+            }
+
+            try 
+            {
+                var createData = new DependantCreateModel
+                {
+                    FullName = DependantFullName,
+                    Relationship = SelectedRelationship,
+                };
+                var result = await _leaseAgreementManagementEndpoint.CreateDependantByChiefOccupantUserId(userId: _loggedInUser.Id, dependantCreateModel: createData, leaseAgreementId: _selectedLeaseAgreementSummary.AgreementId);
+                await LoadList();
+                await _dialogWindowHelper.ShowDialogWindow(result ?? "Success");
+
+            }
+            catch (Exception ex)
+            {
+                await _dialogWindowHelper.ShowDialogWindow(ex.Message);
+            }
         }
 
         public void ClearSelection()
