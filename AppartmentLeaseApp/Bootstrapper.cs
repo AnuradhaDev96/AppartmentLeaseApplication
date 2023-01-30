@@ -29,7 +29,8 @@ namespace AppartmentLeaseApp
                 .PerRequest<IUserManagementEndpoint, UserManagementEndpoint>()
                 .PerRequest<IApartmentManagementEndpoint, ApartmentManagementEndpoint>()
                 .PerRequest<IAnonymousManagementEndpoint, AnonymousManagementEndpoint>()
-                .PerRequest<ILeaseAgreementManagementEndpoint, LeaseAgreementManagementEndpoint>();
+                .PerRequest<ILeaseAgreementManagementEndpoint, LeaseAgreementManagementEndpoint>()
+                .PerRequest<IDialogWindowHelper, DialogWindowHelper>();
 
             // return instances per request
 

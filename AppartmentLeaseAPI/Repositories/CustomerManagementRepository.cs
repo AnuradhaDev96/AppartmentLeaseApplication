@@ -18,5 +18,15 @@ namespace AppartmentLeaseAPI.Repositories
             await _context.SaveChangesAsync();
             return newChiefOccupant.Entity.Id;
         }
+
+        public ChiefOccupant? GetChiefOccupantBySystemUserId(int systemUserId)
+        {
+            return _context.ChiefOccupants.FirstOrDefault(c => c.SystemUserId == systemUserId);
+        }
+
+        public ICollection<Dependant>? GetDependantsByChiefOccupantId(int chiefOccupantId)
+        {
+            return _context.Dependants.Where(d => d.ChiefOccupantId == chiefOccupantId).ToList();
+        }
     }
 }

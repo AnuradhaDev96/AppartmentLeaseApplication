@@ -14,11 +14,14 @@ namespace AppartmentLeaseApp.ViewModels
     {
         private ILoggedInUser _loggedInUser;
         private ILeaseAgreementManagementEndpoint _leaseAgreementManagementEndpoint;
+        private IDialogWindowHelper _dialogWindowHelper;
 
-        public ChiefAccoupantMyLeaseAgreementsViewModel(ILoggedInUser loggedInUser, ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint)
+        public ChiefAccoupantMyLeaseAgreementsViewModel(ILoggedInUser loggedInUser, ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint,
+            IDialogWindowHelper dialogWindowHelper)
         {
             _loggedInUser = loggedInUser;
             _leaseAgreementManagementEndpoint = leaseAgreementManagementEndpoint;
+            _dialogWindowHelper = dialogWindowHelper;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -29,8 +32,8 @@ namespace AppartmentLeaseApp.ViewModels
 
         public async Task LoadList()
         {
-            var chiefOccupantId = _loggedInUser.Id;
-            var list = await _leaseAgreementManagementEndpoint.GetLeaseAgreementsByChiefOccupant(chiefOccupantId);
+            var loggedUserId = _loggedInUser.Id;
+            var list = await _leaseAgreementManagementEndpoint.GetLeaseAgreementsByLoggedUser(loggedUserId);
             MyLeaseAgreementsList = new BindingList<LeaseAgreementSummaryResponse>(list);
         }
 
@@ -56,6 +59,27 @@ namespace AppartmentLeaseApp.ViewModels
                 _selectedLeaseAgreement = value;
                 NotifyOfPropertyChange(() => SelectedLeaseAgreement);
             }
+        }
+
+        public async Task ManageDependants() 
+        {
+            if (SelectedLeaseAgreement == null)
+            {
+                await _dialogWindowHelper.ShowDialogWindow("Please select lease agreement to continue");
+                return;
+            }
+
+            if (SelectedLeaseAgreement.Status == "Extended" || SelectedLeaseAgreement.Status == "Ended")
+            {
+                await _dialogWindowHelper.ShowDialogWindow(@$"Sorry! Dependant management is not allowed for {SelectedLeaseAgreement.Status} lease agreements.");
+                return;
+            }
+
+            await _dialogWindowHelper.ShowPopUpWindow(new ChiefOccupantDependantManagementViewModel(
+                selectedLeaseAgreementSummary: SelectedLeaseAgreement,
+                loggedInUser: _loggedInUser,
+                leaseAgreementManagementEndpoint: _leaseAgreementManagementEndpoint));
+
         }
 
     }

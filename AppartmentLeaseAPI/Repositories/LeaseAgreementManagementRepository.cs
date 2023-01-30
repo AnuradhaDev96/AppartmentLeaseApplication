@@ -20,6 +20,11 @@ namespace AppartmentLeaseAPI.Repositories
             return newLeaseAgreement.Entity.Id;
         }
 
+        public LeaseAgreement? GetLeaseAgreementByAgreementId(int agreementId)
+        {
+            return _context.LeaseAgreements.Where(x => x.Id == agreementId).FirstOrDefault();
+        }
+
         public ICollection<LeaseAgreement>? GetLeaseAgreementsByChiefOccupantId(int chiefOccupantId)
         {
             var leaseAgreements = _context.LeaseAgreements.Where(x => x.ChiefOccupantId == chiefOccupantId).ToList();

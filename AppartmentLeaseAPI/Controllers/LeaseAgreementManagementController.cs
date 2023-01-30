@@ -145,15 +145,20 @@ namespace AppartmentLeaseAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("LeaseAgreements/ChiefOccupant/{chiefOccupantId}")]
+        [HttpGet("LeaseAgreements/User/{userId}")]
         [ProducesResponseType(200, Type = (typeof(IEnumerable<LeaseAgreementSummaryGetDto>)))]
-        public IActionResult GetLeaseAgreementByChiefOccupant(int chiefOccupantId)
+        public IActionResult GetLeaseAgreementsByChiefOccupant(int userId)
         {
             try
             {
-                var leaseAgreements = _leaseAgreementManagementRepository.GetLeaseAgreementsByChiefOccupantId(chiefOccupantId);
-
                 var summaryList = new List<LeaseAgreementSummaryGetDto>();
+
+                var chiefOccupant = _customerManagementRepository.GetChiefOccupantBySystemUserId(userId);
+
+                if (chiefOccupant == null)
+                    return Ok(summaryList);
+
+                var leaseAgreements = _leaseAgreementManagementRepository.GetLeaseAgreementsByChiefOccupantId(chiefOccupant.Id);                
 
                 if (leaseAgreements == null)
                 {
@@ -189,6 +194,43 @@ namespace AppartmentLeaseAPI.Controllers
                 }
                 
                 return Ok(summaryList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("LeaseAgreements/User/{userId}/Dependants/{activeLeaseAgreementId}")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<DependantGetDto>)))]
+        public IActionResult GetDependantsByChiefOccupant(int userId, int activeLeaseAgreementId)
+        {
+            try
+            {
+                var dependantList = new List<DependantGetDto>();
+                #region Lease agreement access validation
+                var selectedLeaseAgreement = _leaseAgreementManagementRepository.GetLeaseAgreementByAgreementId(activeLeaseAgreementId);
+
+                // return empty list of status of agreement is Extended or Ended. 
+                // Because dependants can be edited only if the agreement is New or Started
+                if (selectedLeaseAgreement == null || 
+                    selectedLeaseAgreement.Status == Data.Enums.LeaseAgreementStatus.Extended || 
+                    selectedLeaseAgreement.Status == Data.Enums.LeaseAgreementStatus.Ended)
+                {
+                    return Ok(dependantList);
+                }
+                #endregion
+
+                var chiefOccupant = _customerManagementRepository.GetChiefOccupantBySystemUserId(userId);
+
+                if (chiefOccupant == null)
+                    return Ok(dependantList);
+
+                var dependants = _customerManagementRepository.GetDependantsByChiefOccupantId(chiefOccupant.Id);
+                var mappedDependants = _mapper.Map<List<DependantGetDto>>(dependants);
+
+                return Ok(mappedDependants);
             }
             catch (Exception ex)
             {

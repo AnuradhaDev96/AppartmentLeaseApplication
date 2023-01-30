@@ -2,6 +2,7 @@
 using AppartmentLeaseAPI.Models;
 using AppartmentLeaseAPI.Models.Anonymous;
 using AppartmentLeaseAPI.Models.Apartments;
+using AppartmentLeaseAPI.Models.Customers;
 using AutoMapper;
 
 namespace AppartmentLeaseAPI.Helpers
@@ -21,6 +22,9 @@ namespace AppartmentLeaseAPI.Helpers
 
             CreateMap<Apartment, ApartmentGetDto>();
             CreateMap<ApartmentGetDto, Apartment>();
+
+            CreateMap<Dependant, DependantGetDto>();
+            CreateMap<DependantGetDto, Dependant>();
         }
     }
 }

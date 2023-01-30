@@ -8,5 +8,7 @@ namespace AppartmentLeaseAPI.Interfaces
         Task<int?> CreateLeaseAgreement(LeaseAgreement leaseAgreement);
 
         ICollection<LeaseAgreement>? GetLeaseAgreementsByChiefOccupantId(int chiefOccupantId);
+
+        LeaseAgreement? GetLeaseAgreementByAgreementId(int agreementId);
     }
 }
