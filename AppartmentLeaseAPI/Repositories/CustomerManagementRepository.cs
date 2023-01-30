@@ -35,10 +35,28 @@ namespace AppartmentLeaseAPI.Repositories
             return _context.Dependants.Where(d => d.ChiefOccupantId == chiefOccupantId).ToList();
         }
 
+        public bool IsDependantExistByDependantId(int dependantId)
+        {
+            return _context.Dependants.Any(d => d.Id == dependantId);
+        }
+
+        public bool UpdateDependant(Dependant dependant)
+        {
+            _context.Dependants.Update(dependant);
+            return Save();
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool DeleteDependant(int dependantId)
+        {
+            var dependant = _context.Dependants.FirstOrDefault(d => d.Id == dependantId);
+            _context.Dependants.Remove(dependant);
+            return Save();
         }
     }
 }

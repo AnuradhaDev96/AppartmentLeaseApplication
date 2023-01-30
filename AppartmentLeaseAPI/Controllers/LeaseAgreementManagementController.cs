@@ -286,5 +286,69 @@ namespace AppartmentLeaseAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpPut("LeaseAgreements/User/{userId}/Dependants")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateDependant(int userId, [FromBody] DependantCreateDto dependantUpdateData)
+        {
+            try
+            {
+                var chiefOccupant = _customerManagementRepository.GetChiefOccupantBySystemUserId(userId);
+                if (chiefOccupant == null)
+                    return NotFound("Chief occupant does not exist for this user.");
+
+                if (!_customerManagementRepository.IsDependantExistByDependantId(dependantId: dependantUpdateData.Id))
+                {
+                    return NotFound("Dependant does not exist.");
+                }
+
+                var updateData = _mapper.Map<Dependant>(dependantUpdateData);
+
+                if (!_customerManagementRepository.UpdateDependant(updateData))
+                {
+                    return NotFound("Dependant update failed.");
+                }
+
+                return Ok("Dependant updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("LeaseAgreements/User/{userId}/Dependants/{dependantId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteDependant(int userId, int dependantId)
+        {
+            try
+            {
+                var chiefOccupant = _customerManagementRepository.GetChiefOccupantBySystemUserId(userId);
+                if (chiefOccupant == null)
+                    return NotFound("Chief occupant does not exist for this user.");
+
+                if (!_customerManagementRepository.IsDependantExistByDependantId(dependantId: dependantId))
+                {
+                    return NotFound("Dependant does not exist.");
+                }
+
+                if (!_customerManagementRepository.DeleteDependant(dependantId))
+                {
+                    return NotFound("Dependant delete failed.");
+                }
+
+                return Ok("Dependant deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -11,5 +11,11 @@ namespace AppartmentLeaseAPI.Interfaces
         ICollection<Dependant>? GetDependantsByChiefOccupantId(int chiefOccupantId);
 
         bool CreateDependantByChiefOccupantId(Dependant dependant);
+
+        bool IsDependantExistByDependantId(int dependantId);
+
+        bool UpdateDependant(Dependant dependant);
+
+        bool DeleteDependant(int dependantId);
     }
 }

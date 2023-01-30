@@ -55,6 +55,23 @@ namespace AppartmentLeaseApp.ApiProviders
             }
         }
 
+        public async Task<string?> DeleteDependant(int userId, int dependantId)
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.DeleteAsync(requestUri: @$"LeaseAgreementManagement/LeaseAgreements/User/{userId}/Dependants/{dependantId}"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<string>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
         public async Task<List<DependantResponseModel>>? GetDependantsByLoggedUser(int userId, int selectedLeaseAgreementId)
         {
             using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: @$"LeaseAgreementManagement/LeaseAgreements/User/{userId}/Dependants/{selectedLeaseAgreementId}"))
@@ -79,6 +96,23 @@ namespace AppartmentLeaseApp.ApiProviders
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     var result = await responseMessage.Content.ReadAsAsync<List<LeaseAgreementSummaryResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
+        public async Task<string?> UpdateDependant(int userId, DependantResponseModel updateData)
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.PutAsync(requestUri: @$"LeaseAgreementManagement/LeaseAgreements/User/{userId}/Dependants", content: updateData.ToStringContent()))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<string>();
 
                     return result;
                 }

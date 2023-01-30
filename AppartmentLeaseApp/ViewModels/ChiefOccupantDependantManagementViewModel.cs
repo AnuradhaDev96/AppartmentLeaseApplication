@@ -254,6 +254,56 @@ namespace AppartmentLeaseApp.ViewModels
             }
         }
 
+        public async void UpdateDependant()
+        {
+            if (string.IsNullOrEmpty(DependantFullName) || string.IsNullOrEmpty(SelectedRelationship) || 
+                SelectedDependantId == 0 || SelectedDependantId == null || SelectedDependant == null)
+            {
+                await _dialogWindowHelper.ShowDialogWindow("Please provide required fields.");
+                return;
+            }
+
+            try
+            {
+                var updateData = new DependantResponseModel
+                {
+                    Id = SelectedDependant.Id,
+                    FullName = DependantFullName,
+                    Relationship = SelectedRelationship,
+                    ChiefOccupantId = SelectedDependant.ChiefOccupantId
+                };
+
+                var result = await _leaseAgreementManagementEndpoint.UpdateDependant(userId: _loggedInUser.Id, updateData: updateData);
+                await LoadList();
+                await _dialogWindowHelper.ShowDialogWindow(result ?? "Success");
+
+            }
+            catch (Exception ex)
+            {
+                await _dialogWindowHelper.ShowDialogWindow(ex.Message);
+            }
+        }
+
+        public async void DeleteDependant()
+        {
+            try
+            {
+                if (SelectedDependant == null || SelectedDependantId == 0 || SelectedDependantId == null)
+                {
+                    await _dialogWindowHelper.ShowDialogWindow("Please select dependant to delete.");
+                    return;
+                }
+
+                var result = await _leaseAgreementManagementEndpoint.DeleteDependant(userId: _loggedInUser.Id, dependantId: SelectedDependant.Id);
+                await LoadList();
+                await _dialogWindowHelper.ShowDialogWindow(result ?? "Success");
+            }
+            catch (Exception ex)
+            {
+                await _dialogWindowHelper.ShowDialogWindow(ex.Message);
+            }
+        }
+
         public void ClearSelection()
         {
             SelectedDependant = null;
