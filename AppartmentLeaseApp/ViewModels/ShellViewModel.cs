@@ -17,6 +17,7 @@ namespace AppartmentLeaseApp.ViewModels
 
         // Clerk Dashboard
         private ClerkDashboardViewModel _clerkDashboardViewModel;
+        private ChiefOccupantDashboardViewModel _chiefOccupantDashboardViewModel;
 
         //Utility screens
         private CreateReservationRequestViewModel _createReservationRequestViewModel;
@@ -28,7 +29,7 @@ namespace AppartmentLeaseApp.ViewModels
 
         public ShellViewModel(ICalculations calculations, IEventAggregator events,
             ClerkDashboardViewModel clerkDashboardViewModel, CreateReservationRequestViewModel createReservationRequestViewModel,
-            SimpleContainer simpleContainer)
+            SimpleContainer simpleContainer, ChiefOccupantDashboardViewModel chiefOccupantDashboardViewModel)
         {
             _events = events;
             _events.Subscribe(this);
@@ -36,6 +37,7 @@ namespace AppartmentLeaseApp.ViewModels
 
             _clerkDashboardViewModel = clerkDashboardViewModel;
             _createReservationRequestViewModel = createReservationRequestViewModel;
+            _chiefOccupantDashboardViewModel = chiefOccupantDashboardViewModel;
             _simpleContainer = simpleContainer;
 
             // to retrieve single instance per request
@@ -54,7 +56,16 @@ namespace AppartmentLeaseApp.ViewModels
 
         public Task? HandleAsync(LoginEventModel message, CancellationToken cancellationToken)
         {
-            LoadPage(_clerkDashboardViewModel);
+            var loggedUser = _simpleContainer.GetInstance<ILoggedInUser>();
+            if (loggedUser.Role == "Clerk")
+            {
+                LoadPage(_clerkDashboardViewModel);
+            }
+            else
+            {
+                LoadPage(_chiefOccupantDashboardViewModel);
+            }
+            
             return null;
         }
 

@@ -13,7 +13,6 @@ namespace AppartmentLeaseApp.ViewModels
     {
         private readonly IAPIHelper _apiHelper;
         private IEventAggregator _events;
-        //private readonly string _password;
 
         public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events)
         {
