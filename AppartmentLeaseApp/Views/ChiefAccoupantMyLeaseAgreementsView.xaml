@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AppartmentLeaseApp.Views"
              mc:Ignorable="d" Background="LightCoral"
-             d:DesignHeight="450" d:DesignWidth="960">
+             d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -20,12 +20,12 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="30" Margin="0 15 0 10">
+        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="30" Margin="0 10 0 5">
             My Lease Agreements
         </TextBlock>
 
-        <ListView x:Name="MyLeaseAgreementsList" Grid.Row="1" Grid.Column="1" MinWidth="400" 
-                  MinHeight="300" Margin="10 0 10 80" SelectedItem="{Binding SelectedLeaseAgreement}">
+        <ListView x:Name="MyLeaseAgreementsList" Grid.Row="1" Grid.Column="1" MinWidth="400" MaxWidth="600"
+                  MinHeight="220" Margin="5 0 5 0" SelectedItem="{Binding SelectedLeaseAgreement}">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
@@ -44,12 +44,15 @@
             </ListView.View>
         </ListView>
 
-        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical" Margin="5 0 10 0">
+        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical" Margin="0 0 5 0">
             <Button HorizontalAlignment="Center" x:Name="ManageDependants">
                 Manage My Dependants
             </Button>
             <Button HorizontalAlignment="Center" x:Name="ViewApartmentInfo" Margin="0 8 0 0">
                 View Apartment Details
+            </Button>
+            <Button HorizontalAlignment="Center" x:Name="LeaseExtentions" Margin="0 8 0 0">
+                Lease Extentions
             </Button>
         </StackPanel>
     </Grid>

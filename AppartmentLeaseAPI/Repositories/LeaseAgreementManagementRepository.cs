@@ -30,5 +30,10 @@ namespace AppartmentLeaseAPI.Repositories
             var leaseAgreements = _context.LeaseAgreements.Where(x => x.ChiefOccupantId == chiefOccupantId).ToList();
             return leaseAgreements;
         }
+
+        public ICollection<LeaseExtentionRequest>? GetLeaseExtentionRequestsByLeaseeAgreementId(int leaseAgreementId)
+        {
+            return _context.LeaseExtentionRequests.Where(x => x.LeaseAgreementId == leaseAgreementId).ToList();
+        }
     }
 }

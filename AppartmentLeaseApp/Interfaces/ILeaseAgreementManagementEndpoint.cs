@@ -14,6 +14,7 @@ namespace AppartmentLeaseApp.Interfaces
 
         Task<List<LeaseAgreementSummaryResponse>>? GetLeaseAgreementsByLoggedUser(int userId);
 
+        #region Dependants
         Task<List<DependantResponseModel>>? GetDependantsByLoggedUser(int userId, int selectedLeaseAgreementId);
 
         Task<string?> CreateDependantByChiefOccupantUserId(int leaseAgreementId, int userId, DependantCreateModel dependantCreateModel);
@@ -21,5 +22,11 @@ namespace AppartmentLeaseApp.Interfaces
         Task<string?> UpdateDependant(int userId, DependantResponseModel updateData);
 
         Task<string?> DeleteDependant(int userId, int dependantId);
+        #endregion
+
+        #region LeaseExtentionRequests
+        Task<List<LeaseExtentionGetResponse>>? GetLeaseExtentionsByLeaseAgreementId(int selectedLeaseAgreementId);
+
+        #endregion
     }
 }

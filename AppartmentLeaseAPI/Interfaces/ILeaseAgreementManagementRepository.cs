@@ -10,5 +10,7 @@ namespace AppartmentLeaseAPI.Interfaces
         ICollection<LeaseAgreement>? GetLeaseAgreementsByChiefOccupantId(int chiefOccupantId);
 
         LeaseAgreement? GetLeaseAgreementByAgreementId(int agreementId);
+
+        ICollection<LeaseExtentionRequest>? GetLeaseExtentionRequestsByLeaseeAgreementId(int leaseAgreementId);
     }
 }

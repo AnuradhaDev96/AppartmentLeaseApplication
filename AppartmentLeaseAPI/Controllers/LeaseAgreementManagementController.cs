@@ -120,10 +120,10 @@ namespace AppartmentLeaseAPI.Controllers
             }
             #endregion
 
-            //Update Apartment status to Occupied
-            if (!_apartmentManagementRepository.UpdateApartmentStatus(apartmentId: data.ApartmentId, statusToUpdate: Data.Enums.ApartmentAvailabilityStatus.Occupied))
+            //Update Apartment status to Reserved
+            if (!_apartmentManagementRepository.UpdateApartmentStatus(apartmentId: data.ApartmentId, statusToUpdate: Data.Enums.ApartmentAvailabilityStatus.Reserved))
             {
-                return BadRequest("Apartment status cannot be updated to Occupied");
+                return BadRequest("Apartment status cannot be updated to Reserved");
             }
 
             //Update Selected Parking space status to Purchased
@@ -131,7 +131,7 @@ namespace AppartmentLeaseAPI.Controllers
             {
                 if (!_apartmentManagementRepository.UpdateParkingSpaceStatus(parkingSpaceId: data.PurchasedParkingSpaceId ?? -1, statusToUpdate: Data.Enums.ParkingSpaceStatus.Purchased))
                 {
-                    return BadRequest("Apartment status cannot be updated to Occupied");
+                    return BadRequest("Parrking space status cannot be updated to Purchased");
                 }
             }                
 
@@ -344,6 +344,23 @@ namespace AppartmentLeaseAPI.Controllers
                 }
 
                 return Ok("Dependant deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("LeaseAgreements/{leaseAgreementId}/LeaseExtentionRequests")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<LeaseExtentionRequest>)))]
+        public IActionResult GetLeaseExtentionRequestsByLeaseAgreementId(int leaseAgreementId)
+        {
+            try
+            {
+                var requests = _leaseAgreementManagementRepository.GetLeaseExtentionRequestsByLeaseeAgreementId(leaseAgreementId);
+                
+                return Ok(requests);
             }
             catch (Exception ex)
             {

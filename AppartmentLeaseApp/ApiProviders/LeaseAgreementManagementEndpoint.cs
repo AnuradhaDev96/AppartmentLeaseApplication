@@ -106,6 +106,23 @@ namespace AppartmentLeaseApp.ApiProviders
             }
         }
 
+        public async Task<List<LeaseExtentionGetResponse>>? GetLeaseExtentionsByLeaseAgreementId(int selectedLeaseAgreementId)
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: @$"LeaseAgreementManagement/LeaseAgreements/{selectedLeaseAgreementId}/LeaseExtentionRequests"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<LeaseExtentionGetResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
         public async Task<string?> UpdateDependant(int userId, DependantResponseModel updateData)
         {
             using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.PutAsync(requestUri: @$"LeaseAgreementManagement/LeaseAgreements/User/{userId}/Dependants", content: updateData.ToStringContent()))

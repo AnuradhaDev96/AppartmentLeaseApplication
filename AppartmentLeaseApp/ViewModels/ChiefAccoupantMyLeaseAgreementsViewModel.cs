@@ -82,6 +82,27 @@ namespace AppartmentLeaseApp.ViewModels
                 dialogWindowHelper: _dialogWindowHelper));
 
         }
+        //ChiefOccupantLeaseExtentionsManagementViewModel
+
+        public async Task LeaseExtentions()
+        {
+            if (SelectedLeaseAgreement == null)
+            {
+                await _dialogWindowHelper.ShowDialogWindow("Please select lease agreement to continue");
+                return;
+            }
+
+            if (SelectedLeaseAgreement != null && SelectedLeaseAgreement.Status != "Started")
+            {
+                await _dialogWindowHelper.ShowDialogWindow("Lease Agreement is not in Started mode. You are not allowed to manage extentions.");
+                return;
+            }
+
+            await _dialogWindowHelper.ShowPopUpWindow(new ChiefOccupantLeaseExtentionsManagementViewModel(
+                selectedLeaseAgreementSummary: SelectedLeaseAgreement,
+                leaseAgreementManagementEndpoint: _leaseAgreementManagementEndpoint,
+                dialogWindowHelper: _dialogWindowHelper));
+        }
 
     }
 }
