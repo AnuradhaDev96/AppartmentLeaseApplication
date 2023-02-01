@@ -12,5 +12,13 @@ namespace AppartmentLeaseAPI.Interfaces
         LeaseAgreement? GetLeaseAgreementByAgreementId(int agreementId);
 
         ICollection<LeaseExtentionRequest>? GetLeaseExtentionRequestsByLeaseeAgreementId(int leaseAgreementId);
+
+        bool CreateLeaseExtentionRequestByLeaseAgreementId(LeaseExtentionRequest leaseExtentionRequest);
+
+        bool IsDependantExistByDependantId(int requestId);
+
+        bool UpdateDependant(LeaseExtentionRequest updateRequesData);
+
+        bool DeleteDependant(int requestId);
     }
 }

@@ -367,5 +367,60 @@ namespace AppartmentLeaseAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpPost("LeaseAgreements/LeaseExtentionRequests")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateLeaseExtentionRequestByLeaseAgreementId([FromBody] LeaseExtentionRequestCreateDto data)
+        {
+            try
+            {
+                var leaseAgreement = _leaseAgreementManagementRepository.GetLeaseAgreementByAgreementId(data.LeaseAgreementId);
+                if (leaseAgreement == null)
+                    return NotFound("Lease agreement not found");
+
+                if (leaseAgreement.Status != Data.Enums.LeaseAgreementStatus.Started)
+                {
+                    return NotFound("Lease agreement is not Started yet");
+                }
+
+                // If Started check whether difference between lease agreement End date and current date
+                // is greater than 60 days.
+                var dateDifferenceToOriginalEndDateFromNow = (leaseAgreement.EndtDate - DateTime.Now).Days;
+
+                if (dateDifferenceToOriginalEndDateFromNow < 60)
+                {
+                    return NotFound("Sorry! You should request 2 months before the end date");
+                }
+
+                // Check the new start date in request is ahead the end date in lease agreement
+                // < 0 -> d1 earlier than d2
+                // == 0 -> same date
+                // > 0 => d1 is later than d2
+                var isNewStartDateIsAfterOriginalEndDate = DateTime.Compare(leaseAgreement.EndtDate.Date, data.StartDate.Date) > 0;
+                if (isNewStartDateIsAfterOriginalEndDate)
+                    return NotFound("Sorry! New Start Date is earlier than End Date of Lease Agreement. Please select later date.");
+
+                var createData = _mapper.Map<LeaseExtentionRequest>(data);
+                createData.Status = Data.Enums.LeaseExtentionRequestStatus.Pending;
+
+                if (!_leaseAgreementManagementRepository.CreateLeaseExtentionRequestByLeaseAgreementId(createData))
+                {
+                    return NotFound("Lease extention cannot be created");
+                }
+
+                return Ok("Lease extention request created successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+
     }
 }

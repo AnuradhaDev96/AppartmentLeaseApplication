@@ -27,7 +27,7 @@ namespace AppartmentLeaseApp.ViewModels
 
         protected override async void OnViewLoaded(object view)
         {
-            base.OnViewLoaded(view);
+            base.OnViewLoaded(view);]
 
             //set Active Lease agreement details
             AgreementId = _selectedLeaseAgreementSummary.AgreementId;
