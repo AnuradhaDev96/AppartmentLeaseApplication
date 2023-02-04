@@ -27,6 +27,9 @@ namespace AppartmentLeaseApp.Interfaces
         #region LeaseExtentionRequests
         Task<List<LeaseExtentionGetResponse>>? GetLeaseExtentionsByLeaseAgreementId(int selectedLeaseAgreementId);
 
+        Task<string?> CreateLeaseExtentionRequest(LeaseExtentionCreateRequest requestData);
+
+        Task<string?> ConfirmTermsOfApprovedLeaseExtention(int extentionRequestId);
         #endregion
     }
 }

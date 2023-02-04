@@ -26,7 +26,7 @@ namespace AppartmentLeaseAPI.Repositories
             return Save();
         }
 
-        public bool DeleteDependant(int requestId)
+        public bool DeleteLeaseExtentionRequest(int requestId)
         {
             var request = _context.LeaseExtentionRequests.FirstOrDefault(e => e.Id == requestId);
             if (request == null)
@@ -52,12 +52,12 @@ namespace AppartmentLeaseAPI.Repositories
             return _context.LeaseExtentionRequests.Where(x => x.LeaseAgreementId == leaseAgreementId).ToList();
         }
 
-        public bool IsDependantExistByDependantId(int requestId)
+        public bool IsLeaseExtentionRequestExist(int requestId)
         {
             return _context.LeaseExtentionRequests.Any(e => e.Id == requestId);
         }
 
-        public bool UpdateDependant(LeaseExtentionRequest updateRequesData)
+        public bool UpdateLeaseExtentionRequest(LeaseExtentionRequest updateRequesData)
         {
             _context.LeaseExtentionRequests.Update(updateRequesData);
             return Save();
@@ -67,6 +67,53 @@ namespace AppartmentLeaseAPI.Repositories
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool ConfirmTermsOfApprovedLeaseExtention(LeaseExtentionRequest existingLeaseExtention)
+        {
+            var leaseAgreement = _context.LeaseAgreements.Where(l => l.Id == existingLeaseExtention.LeaseAgreementId).FirstOrDefault();
+            if (leaseAgreement == null) return false;
+
+            // Update lease extention status to Terms confirmed
+            existingLeaseExtention.Status = Data.Enums.LeaseExtentionRequestStatus.TermsConfirmed;
+            _context.LeaseExtentionRequests.Update(existingLeaseExtention);
+
+            // Update lease agreement status to extended
+            leaseAgreement.Status = Data.Enums.LeaseAgreementStatus.Extended;
+            _context.LeaseAgreements.Update(leaseAgreement);
+
+            // Get the apartment class information
+            var apartment = _context.Apartments.Where(ap => ap.Id == leaseAgreement.ApartmentId).FirstOrDefault();
+            var classOfApartment = _context.ApartmentClasses.Where(c => c.Id == apartment.ApartmentClassId).FirstOrDefault();
+
+            // calculate total cost for new lease agreement
+            var extendedLeasePeriodInDays = (existingLeaseExtention.EndDate - existingLeaseExtention.StartDate).Days;
+            int extendedLeasePeriodInMonths = extendedLeasePeriodInDays / 30;
+            var costForExtendedrLeasePeriod = extendedLeasePeriodInMonths * classOfApartment.PricePerMonth;
+
+            if (leaseAgreement.PurchasedParkingSpaceId != null || leaseAgreement.PurchasedParkingSpaceId > 0)
+                costForExtendedrLeasePeriod += 5000.00 * extendedLeasePeriodInMonths;
+
+            var freshLeaseAgreement = new LeaseAgreement
+            {
+                Status = Data.Enums.LeaseAgreementStatus.Fresh,
+                StartDate = existingLeaseExtention.StartDate,
+                EndtDate = existingLeaseExtention.EndDate,
+                IsRefundableDepositPaid = true,
+                IsMonthAdvancePaid = true,
+                TotalCost = costForExtendedrLeasePeriod,
+                PurchasedParkingSpaceId = leaseAgreement.PurchasedParkingSpaceId,
+                ApartmentId = leaseAgreement.ApartmentId,
+                ChiefOccupantId = leaseAgreement.ChiefOccupantId,
+            };
+            
+            _context.LeaseAgreements.Add(freshLeaseAgreement);
+            return Save();
+        }
+
+        public LeaseExtentionRequest? GetLeaseExtentionRequestById(int requestId)
+        {
+            return _context.LeaseExtentionRequests.Where(x => x.Id == requestId).FirstOrDefault();
         }
     }
 }

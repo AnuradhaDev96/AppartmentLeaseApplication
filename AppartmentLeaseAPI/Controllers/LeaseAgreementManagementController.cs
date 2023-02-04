@@ -419,8 +419,66 @@ namespace AppartmentLeaseAPI.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPut("LeaseAgreements/LeaseExtentionRequests")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateLeaseExtentionRequest([FromBody] LeaseExtentionRequest data)
+        {
+            try
+            {
+                if (!_leaseAgreementManagementRepository.IsLeaseExtentionRequestExist(data.Id))
+                {
+                    return NotFound("Lease extention is not found");
+                }
 
+                if (!_leaseAgreementManagementRepository.UpdateLeaseExtentionRequest(data))
+                {
+                    return NotFound("Lease extention cannot be edited");
+                }
 
+                return Ok("Lease extention updated sucessfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("LeaseAgreements/LeaseExtentionRequests/ConfirmTerms/{requestId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult ConfirmTermsOfApprovedLeaseExtentions(int requestId)
+        {
+            try
+            {
+                if (!_leaseAgreementManagementRepository.IsLeaseExtentionRequestExist(requestId))
+                {
+                    return NotFound("Lease extention is not found");
+                }
+
+                var leaseExtentionDbValue = _leaseAgreementManagementRepository.GetLeaseExtentionRequestById(requestId);
+
+                if (leaseExtentionDbValue!.Status != Data.Enums.LeaseExtentionRequestStatus.Approved)
+                {
+                    return NotFound("Sorry! Only approved lease extention requests can be confirmed.");
+                }
+
+                if (!_leaseAgreementManagementRepository.ConfirmTermsOfApprovedLeaseExtention(leaseExtentionDbValue))
+                {
+                    return NotFound("Lease extention cannot be confirmed");
+                }
+
+                return Ok("Lease extention confirmed and Fresh Lease agreement created");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

@@ -15,10 +15,14 @@ namespace AppartmentLeaseAPI.Interfaces
 
         bool CreateLeaseExtentionRequestByLeaseAgreementId(LeaseExtentionRequest leaseExtentionRequest);
 
-        bool IsDependantExistByDependantId(int requestId);
+        bool IsLeaseExtentionRequestExist(int requestId);
 
-        bool UpdateDependant(LeaseExtentionRequest updateRequesData);
+        bool UpdateLeaseExtentionRequest(LeaseExtentionRequest updateRequesData);
 
-        bool DeleteDependant(int requestId);
+        bool DeleteLeaseExtentionRequest(int requestId);
+
+        bool ConfirmTermsOfApprovedLeaseExtention(LeaseExtentionRequest existingLeaseExtention);
+
+        LeaseExtentionRequest? GetLeaseExtentionRequestById(int requestId);
     }
 }

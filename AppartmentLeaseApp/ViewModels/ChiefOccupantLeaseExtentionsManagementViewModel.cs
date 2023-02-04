@@ -27,7 +27,7 @@ namespace AppartmentLeaseApp.ViewModels
 
         protected override async void OnViewLoaded(object view)
         {
-            base.OnViewLoaded(view);]
+            base.OnViewLoaded(view);
 
             //set Active Lease agreement details
             AgreementId = _selectedLeaseAgreementSummary.AgreementId;
@@ -117,8 +117,10 @@ namespace AppartmentLeaseApp.ViewModels
                 NewStartDate = _selectedExtentionRequest == null ? null : _selectedExtentionRequest.StartDate;
                 NewEndDate = _selectedExtentionRequest == null ? null : _selectedExtentionRequest.EndDate;
                 NotifyOfPropertyChange(() => SelectedExtentionRequest);
-                //NotifyOfPropertyChange(() => IsEditMode);
-                //NotifyOfPropertyChange(() => IsCreateMode);
+                NotifyOfPropertyChange(() => IsEditMode);
+                NotifyOfPropertyChange(() => IsCreateMode);
+                NotifyOfPropertyChange(() => IsSelectedExtentionEditable);
+                NotifyOfPropertyChange(() => IsSelectedExtentionApproved);
             }
         }
         #endregion
@@ -170,6 +172,103 @@ namespace AppartmentLeaseApp.ViewModels
                 _newEndDate = value;
                 NotifyOfPropertyChange(() => NewEndDate);
             }
+        }
+
+        public bool IsEditMode
+        {
+            get
+            {
+                bool output = false;
+                if (SelectedExtentionRequest != null)
+                {
+                    output = true;
+                }
+
+                return output;
+            }
+        }
+
+        public bool IsCreateMode
+        {
+            get
+            {
+                bool output = true;
+                if (SelectedExtentionRequest != null)
+                {
+                    output = false;
+                }
+
+                return output;
+            }
+        }
+
+        public bool IsSelectedExtentionEditable
+        {
+            get
+            {
+                bool output = false;
+                if (SelectedExtentionRequest != null && SelectedExtentionRequest.Status == "Pending")
+                {
+                    output = true;
+                }
+
+                return output;
+            }
+        }
+
+        public bool IsSelectedExtentionApproved
+        {
+            get
+            {
+                bool output = false;
+                if (SelectedExtentionRequest != null && SelectedExtentionRequest.Status == "Approved")
+                {
+                    output = true;
+                }
+
+                return output;
+            }
+        }
+
+        public async void AddRequest()
+        {
+            try
+            {
+                var createData = new LeaseExtentionCreateRequest
+                {
+                    LeaseAgreementId = _selectedLeaseAgreementSummary.AgreementId,
+                    StartDate = NewStartDate ?? DateTime.Now.AddDays(61),
+                    EndDate = NewEndDate ?? DateTime.Now.AddDays(122),
+                };
+                var result = await _leaseAgreementManagementEndpoint.CreateLeaseExtentionRequest(createData);
+                await LoadList();
+                await _dialogWindowHelper.ShowDialogWindow(result ?? "Success");
+            }
+            catch (Exception ex)
+            {
+                await _dialogWindowHelper.ShowDialogWindow(ex.Message);
+            }
+        }
+
+        public async void ConfirmTermsOfApprovedRequest()
+        {
+            if (SelectedExtentionRequest == null)
+                return;
+            try
+            {
+                var result = await _leaseAgreementManagementEndpoint.ConfirmTermsOfApprovedLeaseExtention(SelectedExtentionRequest.Id);
+                await LoadList();
+                await _dialogWindowHelper.ShowDialogWindow(result ?? "Success");
+            }
+            catch (Exception ex)
+            {
+                await _dialogWindowHelper.ShowDialogWindow(ex.Message);
+            }
+        }
+
+        public void ClearSelection()
+        {
+            SelectedExtentionRequest = null;
         }
         #endregion
     }
