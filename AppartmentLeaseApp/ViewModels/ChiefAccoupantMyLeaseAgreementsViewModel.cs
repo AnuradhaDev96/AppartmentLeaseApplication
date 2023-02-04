@@ -92,9 +92,9 @@ namespace AppartmentLeaseApp.ViewModels
                 return;
             }
 
-            if (SelectedLeaseAgreement != null && SelectedLeaseAgreement.Status != "Started")
+            if (SelectedLeaseAgreement != null && (SelectedLeaseAgreement.Status == "Ended" || SelectedLeaseAgreement.Status == "New" || SelectedLeaseAgreement.Status == "Fresh"))
             {
-                await _dialogWindowHelper.ShowDialogWindow("Lease Agreement is not in Started mode. You are not allowed to manage extentions.");
+                await _dialogWindowHelper.ShowDialogWindow("Lease Agreement is not in Started or Extended mode. You are not allowed to manage extentions.");
                 return;
             }
 

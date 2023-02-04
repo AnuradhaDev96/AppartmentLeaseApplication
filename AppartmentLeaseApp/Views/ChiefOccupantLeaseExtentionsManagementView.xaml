@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AppartmentLeaseApp.Views"
              mc:Ignorable="d" Background="OldLace"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="850">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -26,7 +26,7 @@
         </TextBlock>
 
         <!--Selected lease agreement column-->
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="6 0 10 0">
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="15 0 10 0">
             <TextBlock FontSize="18" FontWeight="Bold" TextWrapping="Wrap" MaxWidth="120"
                        HorizontalAlignment="Center">
                 Started Lease Agreement
@@ -66,46 +66,53 @@
             </ListView>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Vertical">
+        <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Vertical" Margin="0 0 15 0">
             <TextBlock FontSize="18" FontWeight="Bold" Margin="0 0 0 5" HorizontalAlignment="Center">Manage Request</TextBlock>
             <TextBlock FontSize="12" FontWeight="Medium" MaxWidth="240"
                        TextWrapping="Wrap" TextAlignment="Left" Foreground="#FFEF3602">If selected request is Pending only you can edit.</TextBlock>
             <TextBlock FontSize="12" FontWeight="Medium" MaxWidth="240" Margin="0 5 0 0"
                        TextWrapping="Wrap" TextAlignment="Left" Foreground="#FF1247E1">If selected request is Approved by a manager you can confirm terms and conditions and make payments.</TextBlock>
-            
-            <!--Edit/Add section. Appears only if the status is Pending-->
-            <StackPanel>
-                <TextBlock FontSize="14" FontWeight="Bold" Margin="0 10 0 0">Request Id: (If selected)</TextBlock>
-                <TextBlock x:Name="SelectedRequestId" Margin="0 0 0 0" TextWrapping="Wrap" MaxWidth="160"></TextBlock>
-                
-                <TextBlock FontSize="14" FontWeight="Bold" Margin="0 10 0 0">Status: (Cannot edit)</TextBlock>
-                <TextBlock x:Name="SelectedRequestStatus" Margin="0 0 0 0" TextWrapping="Wrap" MaxWidth="160"></TextBlock>
 
-                <TextBlock FontSize="14" FontWeight="Bold" Margin="0 5 0 0">New Start Date:</TextBlock>
-                <DatePicker SelectedDate="{Binding NewStartDate}" />
-                
-                <TextBlock FontSize="14" FontWeight="Bold" Margin="0 5 0 0">New End Date:</TextBlock>
-                <DatePicker SelectedDate="{Binding NewEndDate}" />
+            <TextBlock FontSize="14" FontWeight="Bold" Margin="0 10 0 0">Request Id: (If selected)</TextBlock>
+            <TextBlock x:Name="SelectedRequestId" Margin="0 0 0 0" TextWrapping="Wrap" MaxWidth="160"></TextBlock>
 
-                <Button x:Name="AddRequest" Margin="0 10 0 0" Background="#FF53DE6F"
-                    Visibility="{Binding IsCreateMode, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    Add
-                </Button>
+            <TextBlock FontSize="14" FontWeight="Bold" Margin="0 10 0 0">Status: (Cannot edit)</TextBlock>
+            <TextBlock x:Name="SelectedRequestStatus" Margin="0 0 0 0" TextWrapping="Wrap" MaxWidth="160"></TextBlock>
+
+            <TextBlock FontSize="14" FontWeight="Bold" Margin="0 5 0 0">New Start Date:</TextBlock>
+            <DatePicker SelectedDate="{Binding NewStartDate}" />
+
+            <TextBlock FontSize="14" FontWeight="Bold" Margin="0 5 0 0">New End Date:</TextBlock>
+            <DatePicker SelectedDate="{Binding NewEndDate}" />
+
+            <Button x:Name="AddRequest" Margin="0 10 0 0" Background="#FF53DE6F"
+                Visibility="{Binding IsCreateMode, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                Add
+            </Button>
+            <StackPanel Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                
                 <Button x:Name="UpdateRequest" Margin="0 8 0 0" Background="#FFFFA600"
-                    Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        Visibility="{Binding IsSelectedExtentionEditable, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     Update
                 </Button>
                 <Button x:Name="DeleteRequest" Margin="0 8 0 0" Background="#FFFF0076"
-                    Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        Visibility="{Binding IsSelectedExtentionEditable, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     Delete
                 </Button>
-                <Button x:Name="ClearSelection" Margin="0 8 0 0" Background="#FF7394F4"
-                    Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <StackPanel  Visibility="{Binding IsSelectedExtentionApproved, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <TextBlock FontSize="12" FontWeight="Medium" MaxWidth="240" Margin="0 5 0 0"
+                           TextWrapping="Wrap" TextAlignment="Left" Foreground="#FF1247E1">
+                        Good News! Manager has approved your extention request. New payments will be calculated and fresh lease agreement will be created. No hidden charges included. Please confirm terms.
+                    </TextBlock>
+                    <Button x:Name="ConfirmTermsOfApprovedRequest" Margin="0 8 0 0"  Background="#FF53DE6F">
+                        Confirm Terms and Conditions
+                    </Button>
+                </StackPanel>
+                <Button x:Name="ClearSelection" Margin="0 8 0 0" Background="#FF7394F4">
                     Clear Selection
                 </Button>
-
             </StackPanel>
-            
+
         </StackPanel>
     </Grid>
 </UserControl>

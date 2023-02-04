@@ -20,6 +20,23 @@ namespace AppartmentLeaseApp.ApiProviders
             _apiHelper = apiHelper;
         }
 
+        public async Task<string?> ConfirmTermsOfApprovedLeaseExtention(int extentionRequestId)
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.PutAsync(requestUri: @$"LeaseAgreementManagement/LeaseAgreements/LeaseExtentionRequests/ConfirmTerms/{extentionRequestId}", content: null))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<string>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
         public async Task<string?> CreateDependantByChiefOccupantUserId(int leaseAgreementId, int userId, DependantCreateModel data)
         {
             using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.PostAsync(requestUri: @$"LeaseAgreementManagement/LeaseAgreements/{leaseAgreementId}/User/{userId}/Dependants", content: data.ToStringContent()))
@@ -43,6 +60,23 @@ namespace AppartmentLeaseApp.ApiProviders
             using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.PostAsync(requestUri: "LeaseAgreementManagement/LeaseAgreements", content: data.ToStringContent()))
             {
                 if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<string>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
+        public async Task<string?> CreateLeaseExtentionRequest(LeaseExtentionCreateRequest requestData)
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.PostAsync(requestUri: "LeaseAgreementManagement/LeaseAgreements/LeaseExtentionRequests", content: requestData.ToStringContent()))
+            {
+                if (responseMessage.IsSuccessStatusCode || responseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
                     var result = await responseMessage.Content.ReadAsAsync<string>();
 
