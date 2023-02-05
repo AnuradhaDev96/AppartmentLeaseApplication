@@ -14,6 +14,7 @@ namespace AppartmentLeaseApp.Models.Apartments
 
         public string? BuildingName { get; set; }
         public string? BuildingLocation { get; set; }
+        public int? ApartmentClassId { get; set; }
         public string? ApartmentClassName { get; set; }
         public string? ReservedParkingSpace { get; set; }
     }

@@ -12,5 +12,7 @@ namespace AppartmentLeaseApp.Interfaces
         Task<string?> CreateReservationRequest(string fullName, string email, string telephoneNumber);
 
         Task<List<ReservationRequestResponse>?> GetReservationRequests();
+
+        Task<string?> CreateWaitingApplication(CreateWaitingApplicationRequest waitingApplication);
     }
 }

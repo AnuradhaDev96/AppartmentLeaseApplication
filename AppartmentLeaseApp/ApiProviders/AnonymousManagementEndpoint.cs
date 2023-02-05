@@ -42,6 +42,24 @@ namespace AppartmentLeaseApp.ApiProviders
             }
         }
 
+        public async Task<string?> CreateWaitingApplication(CreateWaitingApplicationRequest waitingApplication)
+        {
+            var sc = waitingApplication.ToStringContent();
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.PostAsync(requestUri: "AnonymousManagement/WaitingApplications", content: waitingApplication.ToStringContent()))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<string>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
         public async Task<List<ReservationRequestResponse>?> GetReservationRequests()
         {
             using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: "AnonymousManagement/ReservationRequests"))

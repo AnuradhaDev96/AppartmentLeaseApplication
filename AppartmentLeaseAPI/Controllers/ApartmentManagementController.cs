@@ -171,6 +171,49 @@ namespace AppartmentLeaseAPI.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet("Apartments")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentGetDto>)))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAllApartments()
+        {
+            try
+            {
+                var result = _apartmentManagementRepository.GetAllApartments();
+
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        // Overload
+        [Authorize]
+        [HttpGet("Apartments/Filter")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentGetDto>)))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAllApartments([FromQuery] AvailableApartmentFilterQuery query)
+        {
+            try
+            {
+                var result = _apartmentManagementRepository.FilterAllApartments(location: query.Location, apartmentType: query.ApartmentType);
+
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
     }
 }

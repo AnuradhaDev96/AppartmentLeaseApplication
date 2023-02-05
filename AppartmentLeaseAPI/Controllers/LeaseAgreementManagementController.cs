@@ -114,7 +114,7 @@ namespace AppartmentLeaseAPI.Controllers
             
 
             var createdLeaseAgreementId = await _leaseAgreementManagementRepository.CreateLeaseAgreement(newLeaseAgreement);
-            if (createdLeaseAgreementId == null)
+            if (createdLeaseAgreementId == null || createdLeaseAgreementId <= 0)
             {
                 return BadRequest("Lease agreement cannot be created");
             }

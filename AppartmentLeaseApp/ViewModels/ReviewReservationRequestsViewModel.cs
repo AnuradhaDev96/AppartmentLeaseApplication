@@ -113,6 +113,8 @@ namespace AppartmentLeaseApp.ViewModels
                     selectedRequiry: _selectedItem, 
                     apartmentManagementEndpoint: _simpleContainer.GetInstance<IApartmentManagementEndpoint>(),
                     leaseAgreementManagementEndpoint: _simpleContainer.GetInstance<ILeaseAgreementManagementEndpoint>(),
+                    dialogWindowHelper: _simpleContainer.GetInstance<IDialogWindowHelper>(),
+                    anonymousManagementEndpoint: _simpleContainer.GetInstance<IAnonymousManagementEndpoint>(),
                     windowManager: _simpleContainer.GetInstance<IWindowManager>()));
         }
         #endregion

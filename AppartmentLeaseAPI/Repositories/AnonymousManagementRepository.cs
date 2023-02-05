@@ -20,10 +20,22 @@ namespace AppartmentLeaseAPI.Repositories
             return Save();
         }
 
+        public async Task<int?> CreateWaitingApplication(WaitingApplication waitingApplication)
+        {
+            var newWaitingApplication = await _dataContext.WaitingApplications.AddAsync(waitingApplication);
+            await _dataContext.SaveChangesAsync();
+            return newWaitingApplication.Entity.Id;
+        }
+
         public ICollection<ReservationInquiry>? GetReservationInquiries()
         {
             var reservationInquiries = _dataContext.ReservationInquiries.ToList();
             return reservationInquiries;
+        }
+
+        public ReservationInquiry? GetReservationInquiryById(int inquiryId)
+        {
+            return _dataContext.ReservationInquiries.FirstOrDefault(r => r.Id == inquiryId);
         }
 
         public bool IsPendingStatusInquiryExistForTelephoneNumber(string telephoneNumber)
@@ -58,6 +70,21 @@ namespace AppartmentLeaseAPI.Repositories
 
             return Save();
 
+        }
+
+        public bool UpdateReservationInquiryToWaitingListed(int inquiryId, int waitingApplicationId)
+        {
+            var reservationInquiry = _dataContext.ReservationInquiries.Where(r => r.Id == inquiryId).FirstOrDefault();
+
+            if (reservationInquiry == null)
+                return false;
+
+            reservationInquiry.Status = InquiryStatus.WaitingList;
+            reservationInquiry.WaitingApplicationId = waitingApplicationId;
+
+            _dataContext.ReservationInquiries.Update(reservationInquiry);
+
+            return Save();
         }
     }
 }
