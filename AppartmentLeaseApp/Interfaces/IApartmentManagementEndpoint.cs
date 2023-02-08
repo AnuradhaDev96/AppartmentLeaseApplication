@@ -23,5 +23,7 @@ namespace AppartmentLeaseApp.Interfaces
         Task<List<ApartmentsResponse>> GetAllApartmentsWithDetails();
 
         Task<List<ApartmentsResponse>> FilterAllApartments(string location, string apartmentType);
+
+        Task<List<ApartmentsWithMatchingWaitingApplicationsResponse>> GetAvailableApartmentsWithMatchingWaitingApplicationInfo();
     }
 }

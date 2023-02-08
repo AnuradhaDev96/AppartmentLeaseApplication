@@ -204,5 +204,22 @@ namespace AppartmentLeaseApp.ApiProviders
                 }
             }
         }
+
+        public async Task<List<ApartmentsWithMatchingWaitingApplicationsResponse>> GetAvailableApartmentsWithMatchingWaitingApplicationInfo()
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: "ApartmentManagement/Apartments/AvailableApartments/WaitingApplicationInformation"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<ApartmentsWithMatchingWaitingApplicationsResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
     }
 }

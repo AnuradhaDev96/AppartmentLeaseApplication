@@ -3,6 +3,7 @@ using AppartmentLeaseApp.Models.AnonymousModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,10 +45,9 @@ namespace AppartmentLeaseApp.ApiProviders
 
         public async Task<string?> CreateWaitingApplication(CreateWaitingApplicationRequest waitingApplication)
         {
-            var sc = waitingApplication.ToStringContent();
             using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.PostAsync(requestUri: "AnonymousManagement/WaitingApplications", content: waitingApplication.ToStringContent()))
             {
-                if (responseMessage.IsSuccessStatusCode)
+                if (responseMessage.IsSuccessStatusCode || responseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
                     var result = await responseMessage.Content.ReadAsAsync<string>();
 

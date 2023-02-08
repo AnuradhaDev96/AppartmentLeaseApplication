@@ -51,5 +51,9 @@ namespace AppartmentLeaseApp.ViewModels
             await ActivateItemAsync(_simpleContainer.GetInstance<ReviewReservationRequestsViewModel>());
         }
 
+        public async void ReviewWaitingApplications()
+        {
+            await ActivateItemAsync(_simpleContainer.GetInstance<ClerkReviewWaitingQueueViewModel>());
+        }
     }
 }

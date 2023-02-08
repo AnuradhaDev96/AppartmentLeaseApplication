@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontSize="30" Margin="0 15 0 10">
-            Create Wailting Application for Inquiry
+            Create Waiting Application for Inquiry
         </TextBlock>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="6 0 10 10">

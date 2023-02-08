@@ -10,15 +10,19 @@
             <MenuItem Header="_File">
 
             </MenuItem>
-            <MenuItem Header="_Account">
+            <MenuItem Header="_Reservations">
                 <MenuItem x:Name="LoginScreen" Header="_Login" />
                 <MenuItem x:Name="UsersPage" Header="_UsersList" />
                 <MenuItem x:Name="ApartmentClassesPage" Header="_ApartmentClasses" />
                 <MenuItem x:Name="ReviewReservationInquiriesPage" Header="_Reservation Inquiries" />
             </MenuItem>
+
+            <MenuItem Header="_Waiting Applications">
+                <MenuItem x:Name="ReviewWaitingApplications" Header="_Review Waiting Applications" />
+            </MenuItem>
         </Menu>
         <Grid>
-            <ContentControl x:Name="ActiveItem" Margin="0 5 0 20"/>
+            <ContentControl x:Name="ActiveItem" Margin="0 5 0 0"/>
         </Grid>
     </DockPanel>
 </UserControl>

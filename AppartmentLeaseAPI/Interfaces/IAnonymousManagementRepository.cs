@@ -18,6 +18,8 @@ namespace AppartmentLeaseAPI.Interfaces
 
         ICollection<ReservationInquiry>? GetReservationInquiries();
 
+        ICollection<WaitingApplication>? GetWaitingApplicationsByLocationAndClass(string buildingLocation, int apartmentClassId);
+
         ReservationInquiry? GetReservationInquiryById(int inquiryId);
     }
 }
