@@ -68,5 +68,44 @@ namespace AppartmentLeaseAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpPost("WaitingApplications")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CreateWaitingApplicationRecord([FromBody] WaitingApplicationCreateDto data)
+        {
+            try
+            {
+                var reservationRequest = _anonymousManagementRepository.GetReservationInquiryById(data.ReservationInquiryId);
+
+                if (reservationRequest == null)
+                    return NotFound("Reservation inquiry not found");
+
+                if (reservationRequest.Status != Data.Enums.InquiryStatus.PendingResponse)
+                    return NotFound("Reservation request is already processed");
+
+                var createData = _mapper.Map<WaitingApplication>(data);
+                createData.CreatedOn = DateTime.Now;
+
+                var createdWaitingAPplicationId = await _anonymousManagementRepository.CreateWaitingApplication(createData);
+                if (createdWaitingAPplicationId == null || createdWaitingAPplicationId <= 0)
+                {
+                    return NotFound("Waiting application cannot be created.");
+                }
+
+                if (!_anonymousManagementRepository.UpdateReservationInquiryToWaitingListed(inquiryId: reservationRequest.Id, waitingApplicationId: createdWaitingAPplicationId ?? -1))
+                {
+                    return NotFound("Waiting application created but reservation inquiry is still Pending. Please fix manually.");
+                }
+
+                return Ok("Waiting application created successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

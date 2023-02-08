@@ -19,5 +19,11 @@ namespace AppartmentLeaseApp.Interfaces
         Task<List<ParkingSpaceResponse>> GetAvailableParkingSpaces();
 
         Task<LeaseAgreementPricingGetResponse?> GetApartmentPricingDetails(int apartmentId, int? purchasedParkingId, DateTime leaseStartDate, DateTime leaseEndDate);
+
+        Task<List<ApartmentsResponse>> GetAllApartmentsWithDetails();
+
+        Task<List<ApartmentsResponse>> FilterAllApartments(string location, string apartmentType);
+
+        Task<List<ApartmentsWithMatchingWaitingApplicationsResponse>> GetAvailableApartmentsWithMatchingWaitingApplicationInfo();
     }
 }

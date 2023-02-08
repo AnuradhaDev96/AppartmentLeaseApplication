@@ -21,12 +21,12 @@ namespace AppartmentLeaseAPI.Models.Anonymous
 
         public DateTime RequiredStartDate { get; set; }
 
+        public DateTime CreatedOn { get; set; }
+
         [ForeignKey("ApartmentClassId")]
         public int ApartmentClassId { get; set; }
         public ApartmentClass ApartmentClass { get; set; }
 
-        [ForeignKey("BuildingId")]
-        public int BuildingId { get; set; }
-        public Building Building { get; set; }
+        public string RequiredBuildingLocation { get; set; }
     }
 }

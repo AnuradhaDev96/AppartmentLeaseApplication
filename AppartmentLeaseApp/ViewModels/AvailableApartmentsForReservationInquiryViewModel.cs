@@ -20,14 +20,19 @@ namespace AppartmentLeaseApp.ViewModels
         private List<ApartmentsResponse>? _apartmentList;
         private ReservationRequestResponse _selectedRequiry;
         private IWindowManager _windowManager;
+        private IDialogWindowHelper _dialogWindowHelper;
+        private IAnonymousManagementEndpoint _anonymousManagementEndpoint;
 
-        public AvailableApartmentsForReservationInquiryViewModel(IApartmentManagementEndpoint apartmentManagementEndpoint, 
-            ReservationRequestResponse selectedRequiry, IWindowManager windowManager, ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint)
+        public AvailableApartmentsForReservationInquiryViewModel(IApartmentManagementEndpoint apartmentManagementEndpoint, IDialogWindowHelper dialogWindowHelper,
+            ReservationRequestResponse selectedRequiry, IWindowManager windowManager, ILeaseAgreementManagementEndpoint leaseAgreementManagementEndpoint,
+            IAnonymousManagementEndpoint anonymousManagementEndpoint)
         {
             _apartmentManagementEndpoint = apartmentManagementEndpoint;
             _leaseAgreementManagementEndpoint = leaseAgreementManagementEndpoint;
             _selectedRequiry = selectedRequiry;
             _windowManager = windowManager;
+            _dialogWindowHelper = dialogWindowHelper;
+            _anonymousManagementEndpoint = anonymousManagementEndpoint;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -162,6 +167,12 @@ namespace AppartmentLeaseApp.ViewModels
                 return;
             }
 
+            if (_selectedRequiry.Status != "PendingResponse")
+            {
+                await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Sorry! This inquiry has been processed."), null, GetDialogWindowSettings());
+                return;
+            }
+
             if (SelectedApartment == null)
             {                
                 await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Select Apartment to Continue"), null, GetDialogWindowSettings());
@@ -178,6 +189,22 @@ namespace AppartmentLeaseApp.ViewModels
                 windowManager: _windowManager));
             
             
+        }
+
+        public async void AddToWaitingQueue()
+        {
+            if (_selectedRequiry.Status != "PendingResponse")
+            {
+                await _windowManager.ShowDialogAsync(new MessageDisplayDialogViewModel(messageToDisplay: "Sorry! This inquiry has been processed."), null, GetDialogWindowSettings());
+                return;
+            }
+
+            await TryCloseAsync();
+            await _dialogWindowHelper.ShowPopUpWindow(new CreateWaitingApplicationForInquiryViewModel(
+                selectedInquiry: _selectedRequiry, 
+                anonymousManagementEndpoint: _anonymousManagementEndpoint,
+                apartmentManagementEndpoint: _apartmentManagementEndpoint,
+                dialogWindowHelper: _dialogWindowHelper));
         }
 
         private dynamic GetDialogWindowSettings()

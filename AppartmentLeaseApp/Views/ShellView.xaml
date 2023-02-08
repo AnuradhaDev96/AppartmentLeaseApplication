@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AppartmentLeaseApp.Views"
         mc:Ignorable="d"
-        Title="ShellView" Height="450" Width="800">
+        Title="ShellView" Height="500" Width="800">
     <DockPanel>        
         <Grid>
-            <ContentControl x:Name="ActiveItem" Margin="0 5 0 20"/>
+            <ContentControl x:Name="ActiveItem" Margin="0 5 0 0"/>
         </Grid>
     </DockPanel>
 </Window>

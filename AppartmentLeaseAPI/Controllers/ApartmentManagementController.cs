@@ -14,11 +14,13 @@ namespace AppartmentLeaseAPI.Controllers
     public class ApartmentManagementController : ControllerBase
     {
         private readonly IApartmentManagementRepository _apartmentManagementRepository;
+        private readonly IAnonymousManagementRepository _anonymousManagementRepository;
         private readonly IMapper _mapper;
 
-        public ApartmentManagementController(IApartmentManagementRepository apartmentManagementRepository, IMapper mapper)
+        public ApartmentManagementController(IApartmentManagementRepository apartmentManagementRepository, IAnonymousManagementRepository anonymousManagementRepository, IMapper mapper)
         {
             _apartmentManagementRepository = apartmentManagementRepository;
+            _anonymousManagementRepository = anonymousManagementRepository;
             _mapper = mapper;
         }
 
@@ -171,6 +173,90 @@ namespace AppartmentLeaseAPI.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet("Apartments")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentGetDto>)))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAllApartments()
+        {
+            try
+            {
+                var result = _apartmentManagementRepository.GetAllApartments();
+
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        // Overload
+        [Authorize]
+        [HttpGet("Apartments/Filter")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentGetDto>)))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAllApartments([FromQuery] AvailableApartmentFilterQuery query)
+        {
+            try
+            {
+                var result = _apartmentManagementRepository.FilterAllApartments(location: query.Location, apartmentType: query.ApartmentType);
+
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Available Apartments with Waiting list application relationship
+        [Authorize]
+        [HttpGet("Apartments/AvailableApartments/WaitingApplicationInformation")]
+        [ProducesResponseType(200, Type = (typeof(IEnumerable<ApartmentsWithWaitingApplicationInfoGetDto>)))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAvailableApartmentsWithWaitingApplicationInfo()
+        {
+            try
+            {
+                var matchingWaitingApplications = new List<ApartmentsWithWaitingApplicationInfoGetDto>();
+                var availableApartments = _apartmentManagementRepository.GetAvailableApartments();
+
+                // Get matching waiting applications for each apartment
+                foreach (var apartment in availableApartments)
+                {
+                    var matchingWaitingApplicationsOfApartment = _anonymousManagementRepository.GetWaitingApplicationsByLocationAndClass(apartment.BuildingLocation ?? "", apartment.ApartmentClassId ?? 0);
+                    if (matchingWaitingApplicationsOfApartment != null && matchingWaitingApplicationsOfApartment.Any())
+                    {
+                        matchingWaitingApplicationsOfApartment.OrderBy(w => w.CreatedOn);
+                        matchingWaitingApplications.Add(new ApartmentsWithWaitingApplicationInfoGetDto(
+                            parentObject: apartment, 
+                            matchingWaitingApplicationCount: matchingWaitingApplicationsOfApartment.Count,
+                            waitingApplicationsList: matchingWaitingApplicationsOfApartment.ToList()));
+                    } else
+                    {
+                        matchingWaitingApplications.Add(new ApartmentsWithWaitingApplicationInfoGetDto(
+                            parentObject: apartment,
+                            matchingWaitingApplicationCount: 0,
+                            waitingApplicationsList: null));
+                    }
+                }
+
+                return Ok(matchingWaitingApplications.OrderByDescending(m => m.MatchingWaitingApplicationCount));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
     }
 }

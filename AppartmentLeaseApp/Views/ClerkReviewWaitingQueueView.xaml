@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="AppartmentLeaseApp.Views.ClerkReviewWaitingQueueView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AppartmentLeaseApp.Views"
+             mc:Ignorable="d" Background="#FFFBDA69"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" FontSize="30" Margin="0 10 0 0">
+                Review Waiting Queue
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Center" FontSize="16" MaxWidth="450" TextAlignment="Center" TextWrapping="Wrap" Margin="0 0 0 10">
+                You can view the available apartments that matches the waiting applications in the waiting queue.
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"
+                       MaxWidth="250" TextAlignment="Center" TextWrapping="Wrap" Margin="0 0 0 5">
+                Available apartments and Matching Waiting Applications Count
+            </TextBlock>
+            <ListView x:Name="AvaialbleApartmentsWithWaitingInfoList" MaxWidth="250"
+                  MinHeight="250" Margin="5 0 5 0" SelectedItem="{Binding SelectedApartment}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"/>
+                            <GridViewColumn Header="Availability" DisplayMemberBinding="{Binding Status}"/>
+                            <GridViewColumn Header="Matching Waiting Applications" DisplayMemberBinding="{Binding MatchingWaitingApplicationCount}"/>
+                            <GridViewColumn Header="Class" DisplayMemberBinding="{Binding ApartmentClassName}"/>
+                            <GridViewColumn Header="Location" DisplayMemberBinding="{Binding BuildingLocation}"/>
+                            <GridViewColumn Header="Building" DisplayMemberBinding="{Binding BuildingName}"/>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>            
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"
+                       MaxWidth="220" TextAlignment="Center" TextWrapping="Wrap" Margin="0 0 0 5">
+                Matching Waiting Applications for Selected Apartment
+            </TextBlock>
+            <ListView x:Name="MatchingWaitingApplicationList" MaxWidth="320" 
+                  MinHeight="250" Margin="5 0 5 0" SelectedItem="{Binding SelectedWaitingApplication}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"/>
+                            <GridViewColumn Header="Applicant Name" DisplayMemberBinding="{Binding FullName}"/>
+                            <GridViewColumn Header="Created Date" DisplayMemberBinding="{Binding CreatedOn}"/>
+                            <GridViewColumn Header="Required Start Date" DisplayMemberBinding="{Binding RequiredStartDate}"/>
+                            <GridViewColumn Header="Telephone No" DisplayMemberBinding="{Binding TelephoneNo}"/>
+                            <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}"/>
+                            <GridViewColumn Header="Apartment Class Id" DisplayMemberBinding="{Binding ApartmentClassId}"/>
+                            <GridViewColumn Header="Required Location" DisplayMemberBinding="{Binding RequiredBuildingLocation}"/>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"
+                       MaxWidth="150" TextAlignment="Center" TextWrapping="Wrap">
+                Eligible Waiting Application Based on First-Come-First-Serve
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</UserControl>

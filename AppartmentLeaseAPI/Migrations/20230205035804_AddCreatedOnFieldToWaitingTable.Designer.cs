@@ -4,6 +4,7 @@ using AppartmentLeaseAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppartmentLeaseAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230205035804_AddCreatedOnFieldToWaitingTable")]
+    partial class AddCreatedOnFieldToWaitingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,6 +78,9 @@ namespace AppartmentLeaseAPI.Migrations
                     b.Property<int>("ApartmentClassId")
                         .HasColumnType("int");
 
+                    b.Property<int>("BuildingId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -83,10 +89,6 @@ namespace AppartmentLeaseAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequiredBuildingLocation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -100,6 +102,8 @@ namespace AppartmentLeaseAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApartmentClassId");
+
+                    b.HasIndex("BuildingId");
 
                     b.ToTable("WaitingApplications");
                 });
@@ -473,7 +477,15 @@ namespace AppartmentLeaseAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AppartmentLeaseAPI.Models.Apartments.Building", "Building")
+                        .WithMany()
+                        .HasForeignKey("BuildingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ApartmentClass");
+
+                    b.Navigation("Building");
                 });
 
             modelBuilder.Entity("AppartmentLeaseAPI.Models.Apartments.Apartment", b =>

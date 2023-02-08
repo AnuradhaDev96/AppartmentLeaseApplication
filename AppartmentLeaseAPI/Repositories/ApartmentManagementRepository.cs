@@ -65,6 +65,7 @@ namespace AppartmentLeaseAPI.Repositories
                 mappedItem.BuildingLocation = apartment.Building.Location;
                 mappedItem.ReservedParkingSpace = apartment.ParkingSpace.LotNo;
                 mappedItem.ApartmentClassName = apartment.ApartmentClass.Name;
+                mappedItem.ApartmentClassId = apartment.ApartmentClass.Id;
 
                 mappedApartments.Add(mappedItem);
             }
@@ -131,6 +132,7 @@ namespace AppartmentLeaseAPI.Repositories
                 mappedItem.BuildingLocation = apartment.Building.Location;
                 mappedItem.ReservedParkingSpace = apartment.ParkingSpace.LotNo;                
                 mappedItem.ApartmentClassName = apartment.ApartmentClass.Name;
+                mappedItem.ApartmentClassId = apartment.ApartmentClass.Id;
 
                 mappedApartments.Add(mappedItem);
 
@@ -197,6 +199,103 @@ namespace AppartmentLeaseAPI.Repositories
             apartment.ApartmentClass = classOfApartment;
 
             return apartment;
+        }
+
+        public ICollection<ApartmentGetDto> GetAllApartments()
+        {
+            var allApartments = _context.Apartments.ToList();
+
+            //var mappedApartments = _mapper.Map<List<ApartmentGetDto>>(availableApartments);
+            List<ApartmentGetDto> mappedApartments = new List<ApartmentGetDto>();
+
+            foreach (var apartment in allApartments)
+            {
+                // Get Building details
+                var builingBelongs = _context.Buildings.Where(a => a.Id == apartment.BuildingId).FirstOrDefault();
+
+                if (builingBelongs != null)
+                    apartment.Building = builingBelongs;
+
+                // Get Parking details
+                var assignedParkingSpace = _context.ParkingSpaces.Where(a => a.Id == apartment.ParkingSpaceId).FirstOrDefault();
+
+                if (assignedParkingSpace != null)
+                    apartment.ParkingSpace = assignedParkingSpace;
+
+                // Get class details
+                var classOfApartment = _context.ApartmentClasses.Where(a => a.Id == apartment.ApartmentClassId).FirstOrDefault();
+
+                if (classOfApartment != null)
+                    apartment.ApartmentClass = classOfApartment;
+
+                var mappedItem = _mapper.Map<ApartmentGetDto>(apartment);
+
+                mappedItem.BuildingName = apartment.Building.Name;
+                mappedItem.BuildingLocation = apartment.Building.Location;
+                mappedItem.ReservedParkingSpace = apartment.ParkingSpace.LotNo;
+                mappedItem.ApartmentClassName = apartment.ApartmentClass.Name;
+                mappedItem.ApartmentClassId = apartment.ApartmentClass.Id;
+
+                mappedApartments.Add(mappedItem);
+
+            }
+
+            return mappedApartments;
+        }
+
+        public ICollection<ApartmentGetDto> FilterAllApartments(string location = "", string apartmentType = "")
+        {
+            var allApartments = _context.Apartments.ToList();
+
+            // Get related data
+            foreach (var apartment in allApartments)
+            {
+                // Get Building details
+                var builingBelongs = _context.Buildings.Where(a => a.Id == apartment.BuildingId).FirstOrDefault();
+
+                if (builingBelongs != null)
+                    apartment.Building = builingBelongs;
+
+                // Get Parking details
+                var assignedParkingSpace = _context.ParkingSpaces.Where(a => a.Id == apartment.ParkingSpaceId).FirstOrDefault();
+
+                if (assignedParkingSpace != null)
+                    apartment.ParkingSpace = assignedParkingSpace;
+
+                // Get class details
+                var classOfApartment = _context.ApartmentClasses.Where(a => a.Id == apartment.ApartmentClassId).FirstOrDefault();
+
+                if (classOfApartment != null)
+                    apartment.ApartmentClass = classOfApartment;
+            }
+
+            var query = allApartments.AsQueryable();
+
+            // Filter
+            if (!string.IsNullOrEmpty(location))
+                query = query.Where(a => a.Building.Location.Trim().Replace(" ", "").ToLower() == location.Trim().Replace(" ", "").ToLower());
+            if (!string.IsNullOrEmpty(apartmentType))
+                query = query.Where(a => a.ApartmentClass.Name.Trim().Replace(" ", "").ToLower() == apartmentType.Trim().Replace(" ", "").ToLower());
+
+            // Map to result
+            List<ApartmentGetDto> mappedApartments = new List<ApartmentGetDto>();
+
+            //var list = query.ToList();
+
+            foreach (var apartment in query.ToList())
+            {
+                var mappedItem = _mapper.Map<ApartmentGetDto>(apartment);
+
+                mappedItem.BuildingName = apartment.Building.Name;
+                mappedItem.BuildingLocation = apartment.Building.Location;
+                mappedItem.ReservedParkingSpace = apartment.ParkingSpace.LotNo;
+                mappedItem.ApartmentClassName = apartment.ApartmentClass.Name;
+                mappedItem.ApartmentClassId = apartment.ApartmentClass.Id;
+
+                mappedApartments.Add(mappedItem);
+            }
+
+            return mappedApartments;
         }
     }
 }

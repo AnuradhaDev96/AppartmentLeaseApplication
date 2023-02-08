@@ -32,6 +32,9 @@ namespace AppartmentLeaseAPI.Helpers
 
             CreateMap<LeaseExtentionRequest, LeaseExtentionRequestCreateDto>();
             CreateMap<LeaseExtentionRequestCreateDto, LeaseExtentionRequest>();
+
+            CreateMap<WaitingApplication, WaitingApplicationCreateDto>();
+            CreateMap<WaitingApplicationCreateDto, WaitingApplication>();
         }
     }
 }

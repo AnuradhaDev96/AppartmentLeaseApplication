@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppartmentLeaseApp.Models.AnonymousModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AppartmentLeaseApp.Models.Apartments
 {
-    public class ApartmentsResponse
+    public class ApartmentsWithMatchingWaitingApplicationsResponse
     {
         public int Id { get; set; }
 
@@ -17,5 +18,8 @@ namespace AppartmentLeaseApp.Models.Apartments
         public int? ApartmentClassId { get; set; }
         public string? ApartmentClassName { get; set; }
         public string? ReservedParkingSpace { get; set; }
+
+        public int? MatchingWaitingApplicationCount { get; set; }
+        public List<WaitingApplicationResponse>? MatchingWaitingApplicationsList { get; set; }
     }
 }

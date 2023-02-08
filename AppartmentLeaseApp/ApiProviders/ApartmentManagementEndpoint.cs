@@ -20,6 +20,66 @@ namespace AppartmentLeaseApp.ApiProviders
             _apiHelper = apiHelper;
         }
 
+        public async Task<List<ApartmentsResponse>> FilterAllApartments(string location, string apartmentType)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            if (string.IsNullOrEmpty(location.Trim()) && string.IsNullOrEmpty(apartmentType.Trim()))
+            {
+                stringBuilder.Append("ApartmentManagement/Apartments/Filter");
+            }
+            else
+            {
+                stringBuilder.Append("ApartmentManagement/Apartments/Filter?");
+
+                NameValueCollection queryParams = System.Web.HttpUtility.ParseQueryString(string.Empty);
+                if (!string.IsNullOrEmpty(location.Trim()))
+                {
+                    queryParams.Add("Location", location);
+                }
+
+                if (!string.IsNullOrEmpty(apartmentType.Trim()))
+                {
+                    queryParams.Add("ApartmentType", apartmentType);
+                }
+                var keys = queryParams.ToString();
+                stringBuilder.Append(queryParams.ToString());
+
+            }
+
+            var res = stringBuilder.ToString();
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: stringBuilder.ToString()))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<ApartmentsResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
+        public async Task<List<ApartmentsResponse>> GetAllApartmentsWithDetails()
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: "ApartmentManagement/Apartments"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<ApartmentsResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
         public async Task<List<ApartmentsResponse>> FilterAvailableApartments(string location, string apartmentType)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -135,6 +195,23 @@ namespace AppartmentLeaseApp.ApiProviders
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     var result = await responseMessage.Content.ReadAsAsync<List<ParkingSpaceResponse>>();
+
+                    return result;
+                }
+                else
+                {
+                    throw new Exception(responseMessage.StatusCode.ToString());
+                }
+            }
+        }
+
+        public async Task<List<ApartmentsWithMatchingWaitingApplicationsResponse>> GetAvailableApartmentsWithMatchingWaitingApplicationInfo()
+        {
+            using (HttpResponseMessage responseMessage = await _apiHelper.ApiClient.GetAsync(requestUri: "ApartmentManagement/Apartments/AvailableApartments/WaitingApplicationInformation"))
+            {
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var result = await responseMessage.Content.ReadAsAsync<List<ApartmentsWithMatchingWaitingApplicationsResponse>>();
 
                     return result;
                 }
