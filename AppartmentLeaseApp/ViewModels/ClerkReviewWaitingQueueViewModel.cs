@@ -109,7 +109,9 @@ namespace AppartmentLeaseApp.ViewModels
                 _eligibleWaitingApplicationToProceed = value;
                 EligibleWaitingApplicationId = _eligibleWaitingApplicationToProceed == null ? null : _eligibleWaitingApplicationToProceed.Id;
                 EligibleApplicationCreatedDate = _eligibleWaitingApplicationToProceed == null ? null : _eligibleWaitingApplicationToProceed.CreatedOn;
-             
+                EligibleApplicantName = _eligibleWaitingApplicationToProceed == null ? "" : _eligibleWaitingApplicationToProceed.FullName;
+                EligibleTelephoneNo = _eligibleWaitingApplicationToProceed == null ? "" : _eligibleWaitingApplicationToProceed.TelephoneNo;
+                
                 NotifyOfPropertyChange(() => EligibleWaitingApplicationToProceed);
             }
         }
@@ -137,6 +139,31 @@ namespace AppartmentLeaseApp.ViewModels
                 NotifyOfPropertyChange(() => EligibleApplicationCreatedDate);
             }
         }
+
+        private string _eligibleApplicantName;
+
+        public string EligibleApplicantName
+        {
+            get { return _eligibleApplicantName; }
+            set
+            {
+                _eligibleApplicantName = value;
+                NotifyOfPropertyChange(() => EligibleApplicantName);
+            }
+        }
+
+        private string _eligibleTelephoneNo;
+
+        public string EligibleTelephoneNo
+        {
+            get { return _eligibleTelephoneNo; }
+            set
+            {
+                _eligibleTelephoneNo = value;
+                NotifyOfPropertyChange(() => EligibleTelephoneNo);
+            }
+        }
+
         #endregion
     }
 }

@@ -8,20 +8,21 @@ namespace ApartmentLeaseReportingApp
     {
         public Form1()
         {
-            this.Controls.Add(this.reportViewer1);
             InitializeComponent();
         }
 
         private void BtnShowReport_Click(object sender, EventArgs e)
         {
-            reportViewer1.Reset();
-            DataTable dt = GetData();
-            ReportDataSource ds = new ReportDataSource("DataSet1", dt);
+            var apartmentReportForm = new AllApartmentsReport();
+            apartmentReportForm.Show();
+            //reportViewer1.Reset();
+            //DataTable dt = GetData();
+            //ReportDataSource ds = new ReportDataSource("DataSet1", dt);
 
-            reportViewer1.LocalReport.DataSources.Add(ds);
-            reportViewer1.LocalReport.ReportPath = @"D:\Repos\AD\Coursework1\AD_Coursework1\ApartmentLeaseReportingApp\Report1.rdlc";
-            //reportViewer1.LocalReport.ReportEmbeddedResource = System.IO.Path.GetFullPath(@"");
-            reportViewer1.RefreshReport();
+            //reportViewer1.LocalReport.DataSources.Add(ds);
+            //reportViewer1.LocalReport.ReportPath = @"D:\Repos\AD\Coursework1\AD_Coursework1\ApartmentLeaseReportingApp\Report1.rdlc";
+            ////reportViewer1.LocalReport.ReportEmbeddedResource = System.IO.Path.GetFullPath(@"");
+            //reportViewer1.RefreshReport();
         }
 
         private DataTable GetData()
@@ -38,6 +39,24 @@ namespace ApartmentLeaseReportingApp
                 adapter.Fill(dt);
             }
             return dt;
+        }
+
+        private void BtnShowBuildingsReport_Click(object sender, EventArgs e)
+        {
+            var reportForm = new AllBuildingsReport();
+            reportForm.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var reportForm = new AllApartmentClassesView();
+            reportForm.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var reportForm = new AllParkingSpacesReportView();
+            reportForm.Show();
         }
     }
 }
