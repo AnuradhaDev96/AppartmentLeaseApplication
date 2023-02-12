@@ -22,10 +22,16 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="64" FontFamily="Segoe UI Light" Margin="0 0 0 20">
-            Login Form
-        </TextBlock>
-        
+
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="0 30 0 20">
+            <TextBlock HorizontalAlignment="Center" FontSize="40" FontFamily="Bahnschrift SemiBold">
+                Welcome to E-Apartments
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe UI Light">
+                Login 
+            </TextBlock>
+        </StackPanel>
+
         <!--Error message row-->
         <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0 0 0 20" Foreground="Red"
                    x:Name="ErrorMessage" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" MaxWidth="305" TextWrapping="Wrap"/>
@@ -54,7 +60,7 @@
         
         <!--Request button row-->
         <Button Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="CreateRequest" Padding="30 5"
-                HorizontalAlignment="Center">
+                HorizontalAlignment="Center" Margin="0 20 0 0">
             Create Reservation Request
         </Button>
 

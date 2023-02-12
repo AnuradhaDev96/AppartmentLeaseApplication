@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace AppartmentLeaseApp.ViewModels
 {
-    public class ShellViewModel : Conductor<object>, IHandle<LoginEventModel>, IHandle<CreateReservationRequestEventModel>
+    public class ShellViewModel : Conductor<object>, IHandle<LoginEventModel>, IHandle<CreateReservationRequestEventModel>, 
+        IHandle<LogoutEventModel>, IHandle<GoBackToLoginEventModel>
     {
         private ICalculations _calculations;
         //private SystemUsersViewModel _systemUsersViewModel;
@@ -75,9 +76,22 @@ namespace AppartmentLeaseApp.ViewModels
             return null;
         }
 
+        public Task? HandleAsync(LogoutEventModel message, CancellationToken cancellationToken)
+        {
+            _simpleContainer.GetInstance<IAPIHelper>().OnLogoutUser();
+            LoadPage(_simpleContainer.GetInstance<LoginViewModel>());
+            return null;
+        }
+
         public Task? HandleAsync(CreateReservationRequestEventModel message, CancellationToken cancellationToken)
         {
             LoadPage(_createReservationRequestViewModel);
+            return null;
+        }
+
+        public Task? HandleAsync(GoBackToLoginEventModel message, CancellationToken cancellationToken)
+        {
+            LoadPage(_simpleContainer.GetInstance<LoginViewModel>());
             return null;
         }
 

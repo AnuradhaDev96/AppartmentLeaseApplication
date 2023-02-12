@@ -20,6 +20,10 @@ namespace AppartmentLeaseApp.ViewModels
             _events = events;
         }
 
+        public LoginViewModel()
+        {
+        }
+
         private string _userName;
 
         public string UserName

@@ -21,13 +21,17 @@
         <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="40" Margin="0 0 0 10">
             Apartment Classes
         </TextBlock>
-        <ListView x:Name="ApartmentClassList" Grid.Row="1" Grid.Column="1" MinWidth="250" Margin="5 0 15 0"
+        <ListView x:Name="ApartmentClassList" Grid.Row="1" Grid.Column="1" MinWidth="250" MaxWidth="350" Margin="5 0 15 0"
                   SelectedIndex="{Binding SelectedItem}" SelectionMode="Single">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="Refundable Deposit" DisplayMemberBinding="{Binding RefundableDepositAmount}"/>
+                        <GridViewColumn Header="Pric ePer Month" DisplayMemberBinding="{Binding PricePerMonth}"/>
                         <GridViewColumn Header="Attached Bathroom Count" DisplayMemberBinding="{Binding AttachedBathroomCount}"/>
+                        <GridViewColumn Header="Bed Count" DisplayMemberBinding="{Binding BedCount}"/>
+                        <GridViewColumn Header="Max Occupant Count" DisplayMemberBinding="{Binding MaximumOccupantCount}"/>                        
                     </GridView.Columns>
                 </GridView>
             </ListView.View>

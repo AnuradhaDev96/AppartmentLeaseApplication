@@ -1,4 +1,5 @@
-﻿using AppartmentLeaseApp.Interfaces;
+﻿using AppartmentLeaseApp.EventModels;
+using AppartmentLeaseApp.Interfaces;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
@@ -104,6 +105,11 @@ namespace AppartmentLeaseApp.ViewModels
             {
                 ErrorMessage = "Unexpected error occured";
             }
+        }
+
+        public async Task GoBack() 
+        {
+            await _events.PublishOnUIThreadAsync(new GoBackToLoginEventModel());
         }
     }
 }
