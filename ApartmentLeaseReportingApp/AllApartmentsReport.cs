@@ -27,7 +27,7 @@ namespace ApartmentLeaseReportingApp
             ReportDataSource ds = new ReportDataSource("DataSet1", dt);
 
             reportViewer1.LocalReport.DataSources.Add(ds);
-            reportViewer1.LocalReport.ReportPath = @"D:\Repos\AD\Coursework1\AD_Coursework1\ApartmentLeaseReportingApp\Report1.rdlc";
+            reportViewer1.LocalReport.ReportPath = @"D:\Repos\AD\Coursework1\AD_Coursework1\ApartmentLeaseReportingApp\ApartmentSummaryReport.rdlc";
             //reportViewer1.LocalReport.ReportEmbeddedResource = System.IO.Path.GetFullPath(@"");
             reportViewer1.RefreshReport();
         }

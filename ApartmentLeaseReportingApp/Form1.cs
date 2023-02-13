@@ -58,5 +58,17 @@ namespace ApartmentLeaseReportingApp
             var reportForm = new AllParkingSpacesReportView();
             reportForm.Show();
         }
+
+        private void btnManageBuildings_Click(object sender, EventArgs e)
+        {
+            var form = new CreateBuildingWindow();
+            form.Show();
+        }
+
+        private void btnApproveExtensions_Click(object sender, EventArgs e)
+        {
+            var form = new ApproveExtensionRequests();
+            form.Show();
+        }
     }
 }

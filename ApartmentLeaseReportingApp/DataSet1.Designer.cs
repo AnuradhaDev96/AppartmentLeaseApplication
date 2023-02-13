@@ -283,6 +283,12 @@ namespace ApartmentLeaseReportingApp {
             
             private global::System.Data.DataColumn columnStatus;
             
+            private global::System.Data.DataColumn columnBuildingId;
+            
+            private global::System.Data.DataColumn columnApartmentClassId;
+            
+            private global::System.Data.DataColumn columnParkingSpaceId;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public GetAllApartmentsDataTable() {
@@ -334,6 +340,30 @@ namespace ApartmentLeaseReportingApp {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn BuildingIdColumn {
+                get {
+                    return this.columnBuildingId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ApartmentClassIdColumn {
+                get {
+                    return this.columnApartmentClassId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ParkingSpaceIdColumn {
+                get {
+                    return this.columnParkingSpaceId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -369,11 +399,14 @@ namespace ApartmentLeaseReportingApp {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public GetAllApartmentsRow AddGetAllApartmentsRow(string Status) {
+            public GetAllApartmentsRow AddGetAllApartmentsRow(string Status, int BuildingId, int ApartmentClassId, int ParkingSpaceId) {
                 GetAllApartmentsRow rowGetAllApartmentsRow = ((GetAllApartmentsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
-                        Status};
+                        Status,
+                        BuildingId,
+                        ApartmentClassId,
+                        ParkingSpaceId};
                 rowGetAllApartmentsRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGetAllApartmentsRow);
                 return rowGetAllApartmentsRow;
@@ -405,6 +438,9 @@ namespace ApartmentLeaseReportingApp {
             internal void InitVars() {
                 this.columnId = base.Columns["Id"];
                 this.columnStatus = base.Columns["Status"];
+                this.columnBuildingId = base.Columns["BuildingId"];
+                this.columnApartmentClassId = base.Columns["ApartmentClassId"];
+                this.columnParkingSpaceId = base.Columns["ParkingSpaceId"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -414,6 +450,12 @@ namespace ApartmentLeaseReportingApp {
                 base.Columns.Add(this.columnId);
                 this.columnStatus = new global::System.Data.DataColumn("Status", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStatus);
+                this.columnBuildingId = new global::System.Data.DataColumn("BuildingId", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBuildingId);
+                this.columnApartmentClassId = new global::System.Data.DataColumn("ApartmentClassId", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnApartmentClassId);
+                this.columnParkingSpaceId = new global::System.Data.DataColumn("ParkingSpaceId", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnParkingSpaceId);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
                 this.columnId.AutoIncrement = true;
@@ -422,6 +464,9 @@ namespace ApartmentLeaseReportingApp {
                 this.columnId.Unique = true;
                 this.columnStatus.AllowDBNull = false;
                 this.columnStatus.MaxLength = 2147483647;
+                this.columnBuildingId.AllowDBNull = false;
+                this.columnApartmentClassId.AllowDBNull = false;
+                this.columnParkingSpaceId.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -581,6 +626,39 @@ namespace ApartmentLeaseReportingApp {
                 }
                 set {
                     this[this.tableGetAllApartments.StatusColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int BuildingId {
+                get {
+                    return ((int)(this[this.tableGetAllApartments.BuildingIdColumn]));
+                }
+                set {
+                    this[this.tableGetAllApartments.BuildingIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int ApartmentClassId {
+                get {
+                    return ((int)(this[this.tableGetAllApartments.ApartmentClassIdColumn]));
+                }
+                set {
+                    this[this.tableGetAllApartments.ApartmentClassIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int ParkingSpaceId {
+                get {
+                    return ((int)(this[this.tableGetAllApartments.ParkingSpaceIdColumn]));
+                }
+                set {
+                    this[this.tableGetAllApartments.ParkingSpaceIdColumn] = value;
                 }
             }
         }
@@ -746,6 +824,9 @@ namespace ApartmentLeaseReportingApp.DataSet1TableAdapters {
             tableMapping.DataSetTable = "GetAllApartments";
             tableMapping.ColumnMappings.Add("Id", "Id");
             tableMapping.ColumnMappings.Add("Status", "Status");
+            tableMapping.ColumnMappings.Add("BuildingId", "BuildingId");
+            tableMapping.ColumnMappings.Add("ApartmentClassId", "ApartmentClassId");
+            tableMapping.ColumnMappings.Add("ParkingSpaceId", "ParkingSpaceId");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
