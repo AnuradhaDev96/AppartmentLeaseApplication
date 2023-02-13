@@ -5,7 +5,8 @@ namespace AppartmentLeaseAPI.Dtos
 {
     public class ApartmentsWithWaitingApplicationInfoGetDto : ApartmentGetDto
     {
-        public ApartmentsWithWaitingApplicationInfoGetDto(ApartmentGetDto parentObject, int? matchingWaitingApplicationCount, List<WaitingApplication>? waitingApplicationsList)
+        public ApartmentsWithWaitingApplicationInfoGetDto(ApartmentGetDto parentObject, int? matchingWaitingApplicationCount, 
+            List<WaitingApplication>? waitingApplicationsList)
         {
             this.Id = parentObject.Id;
             this.Status = parentObject.Status;

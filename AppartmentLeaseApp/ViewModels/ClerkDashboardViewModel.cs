@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using AppartmentLeaseApp.EventModels;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,15 @@ namespace AppartmentLeaseApp.ViewModels
         private SystemUsersViewModel _systemUsersViewModel;
         private ApartmentClassesViewModel _apartmentClassesViewModel;
         private SimpleContainer _simpleContainer;
+        private IEventAggregator _events;
 
         public ClerkDashboardViewModel(SimpleContainer simpleContainer, SystemUsersViewModel systemUsersViewModel,
-            ApartmentClassesViewModel apartmentClassesViewModel)
+            ApartmentClassesViewModel apartmentClassesViewModel, IEventAggregator events)
         {
             _systemUsersViewModel = systemUsersViewModel;
             _apartmentClassesViewModel = apartmentClassesViewModel;
             _simpleContainer = simpleContainer;
+            _events = events;
         }
 
         private object _currentView;
@@ -54,6 +57,11 @@ namespace AppartmentLeaseApp.ViewModels
         public async void ReviewWaitingApplications()
         {
             await ActivateItemAsync(_simpleContainer.GetInstance<ClerkReviewWaitingQueueViewModel>());
+        }
+
+        public async Task LogOut()
+        {
+            await _events.PublishOnUIThreadAsync(new LogoutEventModel());
         }
     }
 }

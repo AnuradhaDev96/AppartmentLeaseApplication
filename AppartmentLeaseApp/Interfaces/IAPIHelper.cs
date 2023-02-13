@@ -14,5 +14,7 @@ namespace AppartmentLeaseApp.Interfaces
         Task<string?> Authenticate(string username, string password);
 
         Task SyncLoggedInUser(string token);
+
+        void OnLogoutUser();
     }
 }

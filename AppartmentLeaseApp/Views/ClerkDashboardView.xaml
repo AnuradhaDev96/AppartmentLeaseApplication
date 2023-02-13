@@ -7,18 +7,21 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="18">
-            <MenuItem Header="_File">
-
+            <MenuItem Header="_Account">
+                <MenuItem x:Name="LogOut" Header="_Log out" />
             </MenuItem>
             <MenuItem Header="_Reservations">
-                <MenuItem x:Name="LoginScreen" Header="_Login" />
-                <MenuItem x:Name="UsersPage" Header="_UsersList" />
                 <MenuItem x:Name="ApartmentClassesPage" Header="_ApartmentClasses" />
                 <MenuItem x:Name="ReviewReservationInquiriesPage" Header="_Reservation Inquiries" />
             </MenuItem>
 
             <MenuItem Header="_Waiting Applications">
                 <MenuItem x:Name="ReviewWaitingApplications" Header="_Review Waiting Applications" />
+            </MenuItem>
+
+            <MenuItem Header="_Accommodations">
+                <MenuItem x:Name="CheckInCustomer" Header="_Check in customer" />
+                <MenuItem x:Name="CheckOutOccupant" Header="_Check out occupant" />
             </MenuItem>
         </Menu>
         <Grid>

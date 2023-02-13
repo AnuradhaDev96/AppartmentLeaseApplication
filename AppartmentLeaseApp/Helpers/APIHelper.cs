@@ -94,5 +94,17 @@ namespace AppartmentLeaseApp.Helpers
             }
         }
 
+        public void OnLogoutUser()
+        {
+            _apiClient.DefaultRequestHeaders.Clear();
+            _apiClient.DefaultRequestHeaders.Accept.Clear();
+            _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _loggedInUser.Token = "";
+            _loggedInUser.Username = "";
+            _loggedInUser.Role = "";
+            _loggedInUser.Email = "";
+            _loggedInUser.Id = 0;
+        }
+
     }
 }

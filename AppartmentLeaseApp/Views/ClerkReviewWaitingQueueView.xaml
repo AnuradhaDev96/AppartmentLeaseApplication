@@ -78,6 +78,19 @@
                        MaxWidth="150" TextAlignment="Center" TextWrapping="Wrap">
                 Eligible Waiting Application Based on First-Come-First-Serve
             </TextBlock>
+
+            <TextBlock FontSize="12" FontWeight="Bold" Margin="0 5 0 0">Eligible Application Id:</TextBlock>
+            <TextBlock x:Name="EligibleWaitingApplicationId"></TextBlock>
+
+            <TextBlock FontSize="12" FontWeight="Bold" Margin="0 5 0 0">Applicant Name:</TextBlock>
+            <TextBlock x:Name="EligibleApplicantName"></TextBlock>
+
+            <TextBlock FontSize="12" FontWeight="Bold" Margin="0 5 0 0">Applicant Name:</TextBlock>
+            <TextBlock x:Name="EligibleTelephoneNo"></TextBlock>
+
+            <TextBlock FontSize="12" FontWeight="Bold" Margin="0 5 0 0">Created On:</TextBlock>
+            <TextBlock x:Name="EligibleApplicationCreatedDate"></TextBlock>            
+            
         </StackPanel>
     </Grid>
 </UserControl>
